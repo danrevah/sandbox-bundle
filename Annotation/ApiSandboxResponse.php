@@ -23,15 +23,19 @@ final class ApiSandboxResponse extends Annotation
     // Default response type is JSON
     public $type = ApiSandboxResponseTypeEnum::JSON_RESPONSE;
 
+    // Response code to output, default is 200
+    public $responseCode = 200;
+
     /**
      * Request parameters object
      * @var array
      *
      * Example:
      *      parameters = {
-     *          {"name"="param1", "type"="string", "required"=true, value="*"},
-     *          {"name"="param2", "type"="integer", "required"=false, value="1"}
+     *          {"name"="param1", "required"=true},
+     *          {"name"="param2", "required"=false}
      *      }
      */
     public $parameters = [];
+
 }
