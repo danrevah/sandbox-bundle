@@ -1,6 +1,7 @@
 <?php
 namespace danrevah\SandboxResponseBundle\EventListener;
 
+use danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
@@ -46,15 +47,22 @@ class SandboxListener
 
         $reader = new AnnotationReader();
         $reflectionMethod = new ReflectionMethod($controller[0], $controller[1]);
+
+        /** @var ApiSandboxResponse $apiMetaAnnotation */
         $apiMetaAnnotation = $reader->getMethodAnnotation($reflectionMethod, 'danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse');
 
         if( ! $apiMetaAnnotation) {
             // Disabled exception, continue to real controller
             //throw new \Exception(sprintf('Entity class %s does not have required annotation ApiSandboxResponse', get_class($controller[0])));
         } else {
-            $this->validateRequiredParameters($reader, $reflectionMethod);
+            // Validating with Annotation syntax
+            $streamParams = $this->getStreamParams();
+            $this->validateParamsArray($apiMetaAnnotation->parameters, $streamParams);
 
-            $responsePath = $apiMetaAnnotation->value;
+            // Validating with NelomiApi - Not in use
+            //$this->validateRequiredParameters($reader, $reflectionMethod);
+
+            $responsePath = $apiMetaAnnotation->resource;
             $path = $this->kernel->locateResource($responsePath);
             $content = json_decode(file_get_contents($path), 1);
 
@@ -72,39 +80,56 @@ class SandboxListener
      * @param $reflectionClass
      * @throws \InvalidArgumentException
      */
-    private function validateRequiredParameters(AnnotationReader $reader, ReflectionMethod $reflectionClass)
+//    private function validateRequiredParameters(AnnotationReader $reader, ReflectionMethod $reflectionClass)
+//    {
+//        // get api doc annotation
+//        $apiDocAnn = $reader->getMethodAnnotation($reflectionClass, 'Nelmio\ApiDocBundle\Annotation\ApiDoc');
+//
+//        // if has api doc annotation and has parameters validate if recived all required parameters
+//        if ($apiDocAnn instanceof ApiDoc) {
+//            $apiDocParams = $apiDocAnn->getParameters();
+//            $streamParams = $this->getStreamParams();
+//
+//            // search for missing required parameters and throw exception if there's anything missing
+//            foreach ($apiDocParams as $param => $options) {
+//                if (array_key_exists('required', $options) && $options['required'] &&
+//                    ( ! $this->request->request->has($param) && ! $this->request->query->has($param) &&
+//                        ! $streamParams->containsKey($param) )
+//                ) {
+//                    throw new InvalidArgumentException('Missing parameters');
+//                }
+//            }
+//        }
+//    }
+
+    /**
+     * @param $apiDocParams
+     * @param $streamParams
+     * @throws \InvalidArgumentException
+     */
+    private function validateParamsArray($apiDocParams, $streamParams)
     {
-        // get api doc annotation
-        $apiDocAnn = $reader->getMethodAnnotation($reflectionClass, 'Nelmio\ApiDocBundle\Annotation\ApiDoc');
-
-        // if has api doc annotation and has parameters validate if recived all required parameters
-        if ($apiDocAnn instanceof ApiDoc) {
-
-            $apiDocParams = $apiDocAnn->getParameters();
-
-            // get parameters from stream
-            $request = file_get_contents('php://input');
-            $requestArray = json_decode($request, true);
-            $streamParams = is_null($requestArray) ? new ArrayCollection() : new ArrayCollection($requestArray);
-
-            // search for missing required parameters and throw exception if there's anything missing
-            foreach ($apiDocParams as $param => $options) {
-                if ( ! array_key_exists('required', $options)) {
-                    continue;
-                }
-
-                // only validate required true
-                if ( ! $options['required']) {
-                    continue;
-                }
-
-                if ( ! $this->request->request->has($param) &&
-                    ! $this->request->query->has($param) &&
-                    ! $streamParams->containsKey($param)
-                ) {
-                    throw new InvalidArgumentException('Missing parameters');
-                }
+        // search for missing required parameters and throw exception if there's anything missing
+        foreach ($apiDocParams as $param => $options) {
+            if (array_key_exists('required', $options) && $options['required'] &&
+                ( ! $this->request->request->has($options['name']) && ! $this->request->query->has($options['name']) &&
+                    ! $streamParams->containsKey($options['name']) )
+            ) {
+                throw new InvalidArgumentException('Missing parameters');
             }
+
         }
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    private function getStreamParams()
+    {
+        // get parameters from stream
+        $request = $this->request->getContent();
+        $requestArray = json_decode($request, true);
+        $streamParams = is_null($requestArray) ? new ArrayCollection() : new ArrayCollection($requestArray);
+        return $streamParams;
     }
 }

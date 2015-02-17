@@ -29,7 +29,13 @@ class DefaultController extends Controller
      *         400="Bad arguments"
      *     }
      * )
-     * @ApiSandboxResponse("@SandboxResponseBundle/Resources/responses/token.json")
+     * @ApiSandboxResponse(
+     *      resource="@SandboxResponseBundle/Resources/responses/token.json",
+     *      type="json",
+     *      parameters={
+     *          {"name"="some_parameter", "dataType"="string", "required"=true}
+     *      },
+     * )
      */
     public function indexAction(Request $request)
     {
