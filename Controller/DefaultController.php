@@ -23,6 +23,24 @@ class DefaultController extends Controller
      *          {"name"="some_parameter", "required"=true}
      *      },
      * )
+     *
+     * @ApiSandboxMultiResponse(
+     *      parameters={
+     *          {"name"="some_parameter", "required"=true}
+     *      },
+     *      multiResponse={
+     *          {
+     *              "type"="xml",
+     *              "resource"="@SandboxResponseBundle/Resources/responses/token.xml",
+     *              "caseParams": {"some_parameter"="1", "some_parameter2"="2"}
+     *          },
+     *          {
+     *              "type"="json",
+     *              "resource"="@SandboxResponseBundle/Resources/responses/token.json",
+     *              "caseParams": {"some_parameter"="3", "some_parameter2"="4"}
+     *          }
+     *      }
+     * )
      */
     public function indexAction(Request $request)
     {
