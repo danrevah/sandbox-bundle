@@ -1,0 +1,3 @@
+sandbox_response_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SandboxResponseBundle:Default:index }
