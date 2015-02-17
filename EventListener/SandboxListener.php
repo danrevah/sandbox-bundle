@@ -46,11 +46,10 @@ class SandboxListener
 
         $reader = new AnnotationReader();
         $reflectionMethod = new ReflectionMethod($controller[0], $controller[1]);
-        $apiMetaAnnotation = $reader->getMethodAnnotation($reflectionMethod, 'danrevah\\SandboxResponseBundle\\Annotation\\ApiSandboxResponse');
+        $apiMetaAnnotation = $reader->getMethodAnnotation($reflectionMethod, 'danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse');
 
         if( ! $apiMetaAnnotation) {
             // Disabled exception, continue to real controller
-
             //throw new \Exception(sprintf('Entity class %s does not have required annotation ApiSandboxResponse', get_class($controller[0])));
         } else {
             $this->validateRequiredParameters($reader, $reflectionMethod);
@@ -59,6 +58,7 @@ class SandboxListener
             $path = $this->kernel->locateResource($responsePath);
             $content = json_decode(file_get_contents($path), 1);
 
+            // Override controller with fake response
             $event->setController(function() use ($content) {
                 return new JsonResponse($content);
             });
@@ -75,7 +75,7 @@ class SandboxListener
     private function validateRequiredParameters(AnnotationReader $reader, ReflectionMethod $reflectionClass)
     {
         // get api doc annotation
-        $apiDocAnn = $reader->getMethodAnnotation($reflectionClass, 'Nelmio\\ApiDocBundle\\Annotation\\ApiDoc');
+        $apiDocAnn = $reader->getMethodAnnotation($reflectionClass, 'Nelmio\ApiDocBundle\Annotation\ApiDoc');
 
         // if has api doc annotation and has parameters validate if recived all required parameters
         if ($apiDocAnn instanceof ApiDoc) {

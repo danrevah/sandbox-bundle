@@ -12,10 +12,9 @@ use danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse;
 class DefaultController extends Controller
 {
     /**
-     * GET /example
+     * GET /testing_fake_sandbox_response
      *
      * @param Request $request
-     * @param string $name
      * @return array
      * @Rest\View()
      * @ApiDoc(
@@ -30,9 +29,9 @@ class DefaultController extends Controller
      *         400="Bad arguments"
      *     }
      * )
-     * @ApiSandboxResponse("@danrevahSandboxResponseBundle/Resources/responses/token.json")
+     * @ApiSandboxResponse("@SandboxResponseBundle/Resources/responses/token.json")
      */
-    public function indexAction(Request $request, $name)
+    public function indexAction(Request $request)
     {
         return new JsonResponse(['Test Response']);
     }
