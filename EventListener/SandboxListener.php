@@ -2,6 +2,7 @@
 namespace danrevah\SandboxResponseBundle\EventListener;
 
 use danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse;
+use danrevah\SandboxResponseBundle\Annotation\ApiSandboxMultiResponse;
 use danrevah\SandboxResponseBundle\Enum\ApiSandboxResponseTypeEnum;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,27 +51,49 @@ class SandboxListener
         $reader = new AnnotationReader();
         $reflectionMethod = new ReflectionMethod($controller[0], $controller[1]);
 
-        /** @var ApiSandboxResponse $apiMetaAnnotation */
-        $apiMetaAnnotation = $reader->getMethodAnnotation($reflectionMethod, 'danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse');
 
-        if( ! $apiMetaAnnotation || ! $this->request->query->has('sandboxMode')) {
+        // Step [1] - Single Response Annotation
+        /** @var ApiSandboxResponse $apiResponseAnnotation */
+        $apiResponseAnnotation = $reader->getMethodAnnotation(
+            $reflectionMethod,
+            'danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse'
+        );
+
+        /** @var ApiSandboxMultiResponse $apiResponseMultiAnnotation */
+        $apiResponseMultiAnnotation = $reader->getMethodAnnotation(
+            $reflectionMethod,
+            'danrevah\SandboxResponseBundle\Annotation\ApiSandboxMultiResponse'
+        );
+
+        if(( ! $apiResponseAnnotation && ! $apiResponseMultiAnnotation) ||
+             ! $this->request->query->has('sandboxMode')
+        ) {
             // Disabled exception, continue to real controller
             //throw new \Exception(sprintf('Entity class %s does not have required annotation ApiSandboxResponse', get_class($controller[0])));
             return;
         }
 
+        $parameters = $apiResponseAnnotation ? $apiResponseAnnotation->parameters : $apiResponseMultiAnnotation->parameters;
+
         // Validating with Annotation syntax
         $streamParams = $this->getStreamParams();
-        $this->validateParamsArray($apiMetaAnnotation->parameters, $streamParams);
+        $this->validateParamsArray($parameters, $streamParams);
 
-        $responsePath = $apiMetaAnnotation->resource;
+        // Get response
+        list($responsePath, $type) = $this->getResource($apiResponseAnnotation, $apiResponseMultiAnnotation, $streamParams);
+
+        if (is_null($responsePath)) {
+            // If didn't find route path, fall to parent
+            return;
+        }
+
         $path = $this->kernel->locateResource($responsePath);
         $content = file_get_contents($path);
 
-        $statusCode = $apiMetaAnnotation->responseCode;
+        $statusCode = $apiResponseAnnotation->responseCode;
 
         // Override controller with fake response
-        switch (strtolower($apiMetaAnnotation->type))
+        switch (strtolower($type))
         {
             // JSON
             case ApiSandboxResponseTypeEnum::JSON_RESPONSE:
@@ -94,6 +117,60 @@ class SandboxListener
             default:
                 throw new RuntimeException('Unknown type of SandboxApiResponse');
         }
+    }
+
+    /**
+     * @param ApiSandboxResponse $apiResponseAnnotation
+     * @param ApiSandboxMultiResponse $apiResponseMultiAnnotation
+     * @param $streamParams
+     * @throws \Symfony\Component\Serializer\Exception\RuntimeException
+     * @return array
+     */
+    private function getResource(
+        ApiSandboxResponse $apiResponseAnnotation,
+        ApiSandboxMultiResponse $apiResponseMultiAnnotation,
+        $streamParams
+    ) {
+        if ($apiResponseAnnotation) {
+            return [$apiResponseAnnotation->resource, $apiResponseAnnotation->type];
+        }
+
+        // parent type
+        $type = $apiResponseMultiAnnotation->type;
+        $resourcePath = null;
+        foreach ($apiResponseMultiAnnotation->multiResponse as $resource) {
+            if ( ! isset($resource['caseParams'])) {
+                throw new RunTimeException('Each multi response must have caseParams element');
+            }
+            $validateCaseParams = 0;
+
+            // Validate Params with GET, POST, and RAW
+            foreach ($resource->caseParams as $paramName => $paramValue) {
+                if ( ($this->request->query->has($paramName) &&
+                        $this->request->query->get($paramName) == $paramValue)
+                    ||
+                    ($this->request->request->has($paramName) &&
+                        $this->request->request->get($paramName) == $paramValue)
+                    ||
+                    ($streamParams->containsKey($paramName) &&
+                        $streamParams->get($paramName) == $paramValue)
+                ) {
+                    $validateCaseParams++;
+                }
+            }
+
+            // Found a match route params
+            if (count($resource->caseParams) == $validateCaseParams) {
+                // Override parent type if has child type
+                if (isset($resource->type)) {
+                    $type = $resource->type;
+                }
+
+                $resourcePath = $resource->resource;
+            }
+        }
+
+        return [$resourcePath, $type];
     }
 
     /**
