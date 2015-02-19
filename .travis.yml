@@ -12,8 +12,6 @@ matrix:
   fast_finish: true
 
 env:
-  - SYMFONY_VERSION="2.2.*" DB=mysql
-  - SYMFONY_VERSION="2.3.*" DB=mysql
   - SYMFONY_VERSION="2.4.*" DB=mysql
   - SYMFONY_VERSION="2.5.*" DB=mysql
   - SYMFONY_VERSION="2.6.*" DB=mysql
