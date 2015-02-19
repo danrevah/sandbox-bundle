@@ -1,5 +1,24 @@
 {
+    "name": "danrevah/sandbox-bundle",
+    "description": "SandboxBundle",
     "require": {
-        "danrevah/shortifypunit": "1.0.*"
-    }
+        "php": ">=5.4.0",
+        "hamcrest/hamcrest-php": "1.2.0"
+    },
+        "homepage": "https://github.com/danrevah/SandboxBundle",
+        "license": "MIT",
+        "authors": [
+        {
+            "name": "Dan Revah",
+            "email": "dan@revahbox.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/danrevah/SandboxBundle/issues",
+        "source": "https://github.com/danrevah/SandboxBundle/"
+    },
+    "autoload": {
+        "psr-4": { "SandboxBundle\\": "src/" }
+    },
+    "minimum-stability": "dev"
 }

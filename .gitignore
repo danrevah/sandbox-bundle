@@ -1,2 +1,4 @@
 build/
 phpunit.xml
+Tests/cache/
+Tests/config/
