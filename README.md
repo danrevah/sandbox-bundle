@@ -32,4 +32,5 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
         $bundles[] = new danrevah\SandboxBundle\SandboxBundle();
     }
 ```
-6. That's it! you can now access your sandbox environment using `app_sandbox.php`
+6. Copy the file from `project-root-directory/app/config/config_dev.yml` and call it `config_sandbox.yml`.
+7. That's it! you can now access your sandbox environment using `app_sandbox.php`
