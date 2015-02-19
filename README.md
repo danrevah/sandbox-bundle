@@ -33,4 +33,10 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
     }
 ```
 6. Copy the file from `project-root-directory/app/config/config_dev.yml` and call it `config_sandbox.yml`.
-7. That's it! you can now access your sandbox environment using `app_sandbox.php`
+7. Add this to your `config_sandbox.yml`
+```yml
+    sandbox:
+      response:
+        force: true # Force mode means you won't be able to fall to the REAL controller if path's annotation not found.
+```
+8. That's it! you can now access your sandbox environment using `app_sandbox.php`
