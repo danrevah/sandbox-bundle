@@ -23,7 +23,7 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
 ## Creating a Sandbox environment
 
 1. Copy the file from your `project-root-directory/web/app_dev.php` and call the new file `app_sandbox.php`.
-2. Change `$kernel = new AppKernel('dev', true);` to `$kernel = new AppKernel('sandbox', true);`
+2. In the `app_sandbox.php` file change `$kernel = new AppKernel('dev', true);` to `$kernel = new AppKernel('sandbox', true);`
 3. Copy the file from your `project-root-directory/app/config_dev.yml` and call it `config_sandbox.yml`.
 4. Go to `project-root-directory/app/AppKernel.php` and change this line `in_array($this->getEnvironment(), array('dev', 'test')` to `in_array($this->getEnvironment(), array('dev', 'test', 'sandbox')`.
 5. In the AppKernel.php file after the if case you've just edited add this case also
