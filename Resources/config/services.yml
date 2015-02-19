@@ -1,6 +1,12 @@
 services:
-  travelyo.response_listener:
+  danrevah.response_listener:
       class: danrevah\SandboxBundle\EventListener\SandboxListener
-      arguments: [@kernel, @request_stack]
+      arguments: [@request_stack, @danrevah.sandbox_response_manager]
       tags:
           - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+  danrevah.sandbox_response_manager:
+      class: danrevah\SandboxBundle\Managers\SandboxResponseManager
+      arguments: [@kernel, @service_container, @danrevah.annotations_reader]
+  danrevah.annotations_reader:
+      class: Doctrine\Common\Annotations\AnnotationReader
+      arguments: []
