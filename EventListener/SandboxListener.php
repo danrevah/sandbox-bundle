@@ -62,9 +62,9 @@ class SandboxListener
         /** @var ApiSandboxMultiResponse $apiResponseMultiAnnotation */
         $apiResponseMultiAnnotation = $reader->getMethodAnnotation(
             $reflectionMethod,
-            'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse'
+            'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse' 
         );
- 
+
         if(( ! $apiResponseAnnotation && ! $apiResponseMultiAnnotation) ||
              ! $this->request->query->has('sandboxMode')
         ) {
