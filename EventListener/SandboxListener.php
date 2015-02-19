@@ -1,9 +1,9 @@
 <?php
-namespace danrevah\SandboxResponseBundle\EventListener;
+namespace danrevah\SandboxBundle\EventListener;
 
-use danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse;
-use danrevah\SandboxResponseBundle\Annotation\ApiSandboxMultiResponse;
-use danrevah\SandboxResponseBundle\Enum\ApiSandboxResponseTypeEnum;
+use danrevah\SandboxBundle\Annotation\ApiSandboxResponse;
+use danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse;
+use danrevah\SandboxBundle\Enum\ApiSandboxResponseTypeEnum;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
@@ -56,13 +56,13 @@ class SandboxListener
         /** @var ApiSandboxResponse $apiResponseAnnotation */
         $apiResponseAnnotation = $reader->getMethodAnnotation(
             $reflectionMethod,
-            'danrevah\SandboxResponseBundle\Annotation\ApiSandboxResponse'
+            'danrevah\SandboxBundle\Annotation\ApiSandboxResponse'
         );
 
         /** @var ApiSandboxMultiResponse $apiResponseMultiAnnotation */
         $apiResponseMultiAnnotation = $reader->getMethodAnnotation(
             $reflectionMethod,
-            'danrevah\SandboxResponseBundle\Annotation\ApiSandboxMultiResponse'
+            'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse'
         );
 
         if(( ! $apiResponseAnnotation && ! $apiResponseMultiAnnotation) ||
@@ -73,24 +73,43 @@ class SandboxListener
             return;
         }
 
-        $parameters = $apiResponseAnnotation ? $apiResponseAnnotation->parameters : $apiResponseMultiAnnotation->parameters;
+        $parameters = $apiResponseAnnotation ? $apiResponseAnnotation->parameters :
+            $apiResponseMultiAnnotation->parameters;
 
         // Validating with Annotation syntax
         $streamParams = $this->getStreamParams();
         $this->validateParamsArray($parameters, $streamParams);
 
         // Get response
-        list($responsePath, $type) = $this->getResource($apiResponseAnnotation, $apiResponseMultiAnnotation, $streamParams);
+        list($responsePath, $type, $statusCode) = $this->getResource(
+            $apiResponseAnnotation,
+            $apiResponseMultiAnnotation,
+            $streamParams
+        );
 
-        if (is_null($responsePath)) {
-            // If didn't find route path, fall to parent
-            return;
+        // If didn't find route path, fall to responseFallback
+        if (is_null($responsePath) && $apiResponseMultiAnnotation) {
+            if (empty($apiResponseMultiAnnotation->responseFallback)) {
+                throw new RuntimeException('Missing `responseFallback` in Sandbox annotation');
+            }
+
+            if ( ! isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
+                throw new RuntimeException('Missing resource in `responseFallback` Sandbox annotation');
+            }
+
+            if (isset($apiResponseMultiAnnotation->responseFallback['type'])) {
+                $type = $apiResponseMultiAnnotation->responseFallback['type'];
+            }
+
+            if (isset($apiResponseMultiAnnotation->responseFallback['responseCode'])) {
+                $statusCode = $apiResponseMultiAnnotation->responseFallback['responseCode'];
+            }
+
+            $responsePath = $apiResponseMultiAnnotation->responseFallback['resource'];
         }
 
         $path = $this->kernel->locateResource($responsePath);
         $content = file_get_contents($path);
-
-        $statusCode = $apiResponseAnnotation->responseCode;
 
         // Override controller with fake response
         switch (strtolower($type))
@@ -127,25 +146,31 @@ class SandboxListener
      * @return array
      */
     private function getResource(
-        ApiSandboxResponse $apiResponseAnnotation,
-        ApiSandboxMultiResponse $apiResponseMultiAnnotation,
+        $apiResponseAnnotation,
+        $apiResponseMultiAnnotation,
         $streamParams
     ) {
         if ($apiResponseAnnotation) {
-            return [$apiResponseAnnotation->resource, $apiResponseAnnotation->type];
+            return [
+                $apiResponseAnnotation->resource,
+                $apiResponseAnnotation->type,
+                $apiResponseAnnotation->responseCode
+            ];
         }
 
-        // parent type
+        // parent type, and responseCode
         $type = $apiResponseMultiAnnotation->type;
+        $responseCode = $apiResponseMultiAnnotation->responseCode;
         $resourcePath = null;
+
         foreach ($apiResponseMultiAnnotation->multiResponse as $resource) {
-            if ( ! isset($resource['caseParams'])) {
-                throw new RunTimeException('Each multi response must have caseParams element');
+            if ( ! isset($resource['caseParams']) || ! isset($resource['resource'])) {
+                throw new RunTimeException('Each multi response must have caseParams and resource property');
             }
             $validateCaseParams = 0;
 
             // Validate Params with GET, POST, and RAW
-            foreach ($resource->caseParams as $paramName => $paramValue) {
+            foreach ($resource['caseParams'] as $paramName => $paramValue) {
                 if ( ($this->request->query->has($paramName) &&
                         $this->request->query->get($paramName) == $paramValue)
                     ||
@@ -160,17 +185,24 @@ class SandboxListener
             }
 
             // Found a match route params
-            if (count($resource->caseParams) == $validateCaseParams) {
+            if (count($resource['caseParams']) == $validateCaseParams) {
                 // Override parent type if has child type
-                if (isset($resource->type)) {
-                    $type = $resource->type;
+                if (isset($resource['type'])) {
+                    $type = $resource['type'];
                 }
 
-                $resourcePath = $resource->resource;
+                if (isset($resource['statusCode'])) {
+                    $responseCode = $resource['statusCode'];
+                }
+
+                $resourcePath = $resource['resource'];
+
+                // If found route break loop
+                break;
             }
         }
 
-        return [$resourcePath, $type];
+        return [$resourcePath, $type, $responseCode];
     }
 
     /**

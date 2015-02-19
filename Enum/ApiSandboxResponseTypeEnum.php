@@ -1,6 +1,6 @@
 <?php
 
-namespace danrevah\SandboxResponseBundle\Enum;
+namespace danrevah\SandboxBundle\Enum;
 
 class ApiSandboxResponseTypeEnum {
 

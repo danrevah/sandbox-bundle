@@ -1,8 +1,8 @@
 <?php
 
-namespace danrevah\SandboxResponseBundle\Annotation;
+namespace danrevah\SandboxBundle\Annotation;
 
-use danrevah\SandboxResponseBundle\Enum\ApiSandboxResponseTypeEnum;
+use danrevah\SandboxBundle\Enum\ApiSandboxResponseTypeEnum;
 use Doctrine\Common\Annotations\Annotation;
 
 /**
@@ -16,7 +16,7 @@ final class ApiSandboxResponse extends Annotation
      * @var string
      *
      * Example:
-     *      resource="@SandboxResponseBundle/Resources/responses/token.json"
+     *      resource="@SandboxBundle/Resources/responses/token.json"
      */
     public $resource;
 

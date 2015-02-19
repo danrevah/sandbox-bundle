@@ -1,8 +1,8 @@
 <?php
 
-namespace danrevah\SandboxResponseBundle\Annotation;
+namespace danrevah\SandboxBundle\Annotation;
 
-use danrevah\SandboxResponseBundle\Enum\ApiSandboxResponseTypeEnum;
+use danrevah\SandboxBundle\Enum\ApiSandboxResponseTypeEnum;
 use Doctrine\Common\Annotations\Annotation;
 
 /**
@@ -14,6 +14,23 @@ final class ApiSandboxMultiResponse extends Annotation
     // Default response type is JSON
     public $type = ApiSandboxResponseTypeEnum::JSON_RESPONSE;
 
+    // Response code to output, default is 200
+    public $responseCode = 200;
+
+    /**
+     * Response Fallback
+     * @var array
+     * @desc If could not find any matching route, it will use this route instead
+     *
+     * Example:
+     *     responseFallback={
+     *          "type"="xml",
+     *          "responseCode"=500,
+     *          "resource"="@SandboxBundle/Resources/responses/token.xml"
+     *     },
+     */
+    public $responseFallback = [];
+
     /**
      * Multi Response
      * @var array
@@ -21,13 +38,15 @@ final class ApiSandboxMultiResponse extends Annotation
      * Example:
      *      multiResponse={
      *          {
+     *              "responseCode":200,
      *              "type"="xml",
-     *              "resource"="@SandboxResponseBundle/Resources/responses/token.xml",
+     *              "resource"="@SandboxBundle/Resources/responses/token.xml",
      *              "caseParams": {"some_parameter"="1", "some_parameter2"="2"}
      *          },
      *          {
+     *              "responseCode":200,
      *              "type"="json",
-     *              "resource"="@SandboxResponseBundle/Resources/responses/token.json",
+     *              "resource"="@SandboxBundle/Resources/responses/token.json",
      *              "caseParams": {"some_parameter"="3", "some_parameter2"="4"}
      *          }
      *      }

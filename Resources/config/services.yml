@@ -1,6 +1,6 @@
 services:
   travelyo.response_listener:
-      class: danrevah\SandboxResponseBundle\EventListener\SandboxListener
+      class: danrevah\SandboxBundle\EventListener\SandboxListener
       arguments: [@kernel, @request_stack]
       tags:
           - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

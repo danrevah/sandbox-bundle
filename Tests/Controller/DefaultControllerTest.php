@@ -1,6 +1,6 @@
 <?php
 
-namespace danrevah\SandboxResponseBundle\Tests\Controller;
+namespace danrevah\SandboxBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
