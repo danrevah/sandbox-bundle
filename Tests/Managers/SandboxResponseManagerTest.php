@@ -65,7 +65,7 @@ class testObject
     }
 }
 
-class SandboxResponseManagerTest extends KernelAwareTest
+class SandboxResponseManagerTest extends KernelAwareTest 
 {
     /**
      * @expectedException \Exception
