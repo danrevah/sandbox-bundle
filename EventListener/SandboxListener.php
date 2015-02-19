@@ -64,7 +64,7 @@ class SandboxListener
             $reflectionMethod,
             'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse'
         );
-
+ 
         if(( ! $apiResponseAnnotation && ! $apiResponseMultiAnnotation) ||
              ! $this->request->query->has('sandboxMode')
         ) {
