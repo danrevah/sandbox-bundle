@@ -1,11 +1,18 @@
-# SandboxBundle &nbsp; (in-development)
-[![Build Status](https://travis-ci.org/danrevah/SandboxBundle.svg?branch=master)](https://travis-ci.org/danrevah/SandboxBundle)
+# SandboxBundle &nbsp; [![Build Status](https://travis-ci.org/danrevah/SandboxBundle.svg?branch=master)](https://travis-ci.org/danrevah/SandboxBundle)
 
 > Symfony2 SandboxBundle
-> used for creating a Sandbox enviorment and response for API
+> is mostly used in conditions when you don't want to reach your real controller on a sandbox enviorment,
+> for example, if you have a controller which handles a Purchase, 
+> you could use a fake response instead of creating a real purchase request.
+
+
+## Table of contents
 
  * [Installation](#installation)
  * [Create a Sandbox environment](#create-a-sandbox-environment)
+ * [Single response annotation](#single-response-annotation)
+ * [Multi response annotation](#multi-response-annotation)
+
 
 ## Installation
 
@@ -41,4 +48,72 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
         # to the REAL controller if a Sandbox response is not available.
         # It will produce an error instead.
 ```
-* That's it! you can now access your sandbox environment using `app_sandbox.php`
+* **That's it! you can now access your sandbox environment using `app_sandbox.php`**
+
+## Single Response Annotation
+
+```php
+    /**
+     * GET /resource
+     *
+     * @ApiSandboxResponse(
+     *      responseCode=200,
+     *      type="json",
+     *      parameters={
+     *          {"name"="some_parameter", "required"=true}
+     *      },
+     *      resource="@SandboxBundle/Resources/responses/token.json"
+     * )
+     */
+    public function getAction() {
+        return array('foo');
+    }
+```
+
+* `responseCode` (default = 200) - it's the Http response code of the Sandbox response.
+* `type` (default = 'json') - you can choose between 'json' and 'xml'.
+* `parameters` (default = array()) - this is used to validate required parameters in the Sandbox API in order to produce an Exception if the parameter is missing.
+* `resource` (**required**) - the real controller will be overwritten by this, in the above example it will ALWAYS return the contents of the `token.json` instead of the 'foo' from the real getAction(), it won't even go inside.
+
+
+## Multi Response Annotation
+
+```php
+    /**
+     * POST /resource
+     *
+     * @ApiSandboxMultiResponse(
+     *      responseCode=200,
+     *      type="json",
+     *      parameters={
+     *          {"name"="some_parameter", "required"=true}
+     *      },
+     *      responseFallback={
+     *          "type"="xml",
+     *          "responseCode"=500,
+     *          "resource"="@SandboxBundle/Resources/responses/error.xml"
+     *      },
+     *      multiResponse={
+     *          {
+     *              "type"="xml",
+     *              "resource"="@SandboxBundle/Resources/responses/token.xml",
+     *              "caseParams": {"some_parameter"="1", "some_parameter2"="2"}
+     *          },
+     *          {
+     *              "resource"="@SandboxBundle/Resources/responses/token.json",
+     *              "caseParams": {"some_parameter"="3", "some_parameter2"="4"}
+     *          }
+     *      }
+     * )
+     */
+    public function postAction() {
+        return array('bar');
+    }
+```
+
+* `responseCode` (default = 200) - it's the Http response code of the Sandbox response.
+* `type` (default = 'json') - you can choose between 'json' and 'xml'.
+* `parameters` (default = array()) - this is used to validate required parameters in the Sandbox API in order to produce an Exception if the parameter is missing.
+* `multiResponse` (**required**) - used to find matching `parameters` from the request and if the values are equal, it returns a response with the `resource` file mentiond. the parameters `type` and `responseCode` insdie the `multiResponse` are not required it will use the parent parameters if none is found inside a matching case.
+* `responseFallback` (**required**) - it's using this response when none of the `multiResponse` `caseParams` has been matched.
+
