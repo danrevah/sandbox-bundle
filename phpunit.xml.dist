@@ -10,9 +10,9 @@
         </testsuite>
     </testsuites>
 
-    <logging>
+    <!--<logging>
         <log type="coverage-html" target="build/coverage"/>
-    </logging>
+    </logging>-->
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
@@ -20,7 +20,4 @@
         </whitelist>
     </filter>
 
-    <php>
-        <server name="KERNEL_DIR" value="./app/" />
-    </php>
 </phpunit>
