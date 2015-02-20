@@ -16,7 +16,6 @@ env:
   - SYMFONY_VERSION="2.5.*" DB=mysql
   - SYMFONY_VERSION="2.6.*" DB=mysql
   - SYMFONY_VERSION="2.7.*" DB=mysql
-  - SYMFONY_VERSION="dev-master" DB=mysql
 
 install:
   - composer self-update
