@@ -48,7 +48,7 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
         # to the REAL controller if a Sandbox response is not available.
         # It will produce an error instead.
 ```
-* That's it! you can now access your sandbox environment using `app_sandbox.php`
+* **That's it! you can now access your sandbox environment using `app_sandbox.php`**
 
 ## Single Response Annotation
 
