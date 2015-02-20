@@ -10,8 +10,6 @@
  * [Create a Sandbox environment](#create-a-sandbox-environment)
  * [Single response annotation](#single-response-annotation)
  * [Multi response annotation](#multi-response-annotation)
- * 
-## Installation
 
 The following instructions outline installation using Composer. If you don't
 have Composer, you can download it from [http://getcomposer.org/](http://getcomposer.org/)
