@@ -1,7 +1,7 @@
 # SandboxBundle &nbsp; [![Build Status](https://travis-ci.org/danrevah/SandboxBundle.svg?branch=master)](https://travis-ci.org/danrevah/SandboxBundle)
 
 > Symfony2 SandboxBundle
-> it's mostly used in conditions when you don't want to reach your real controller on a sandbox enviorment,
+> is mostly used in conditions when you don't want to reach your real controller on a sandbox enviorment,
 > for example, if you have a controller which handles a Purchase, 
 > you could use a fake response instead of creating a real purchase request.
 
