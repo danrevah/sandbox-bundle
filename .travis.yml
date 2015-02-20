@@ -22,7 +22,7 @@ install:
   - composer self-update
   - composer install
   - composer require symfony/framework-bundle:${SYMFONY_VERSION}
-  - composer require symfony/finder
+  - composer require doctrine/common
 
 before_script:
   - mkdir -p build/logs
