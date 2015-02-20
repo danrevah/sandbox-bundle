@@ -5,6 +5,9 @@
 > for example, if you have a controller which handles a Purchase, 
 > you could use a fake response instead of creating a real purchase request.
 
+
+## Table of contents
+
  * [Installation](#installation)
  * [Create a Sandbox environment](#create-a-sandbox-environment)
  * [Single response annotation](#single-response-annotation)
