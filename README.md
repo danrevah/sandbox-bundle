@@ -27,7 +27,7 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
 ```php 
     $kernel = new AppKernel('dev', true); 
 ``` 
-to 
+    to 
 ```php
     $kernel = new AppKernel('sandbox', true);
 ```
@@ -35,7 +35,7 @@ to
 ```php
     if (in_array($this->getEnvironment(), array('dev', 'test'))) {
 ```
-to 
+    to 
 ```php
     if (in_array($this->getEnvironment(), array('dev', 'test','sandbox'))) {
 ```
