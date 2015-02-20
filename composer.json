@@ -18,7 +18,7 @@
         "source": "https://github.com/danrevah/SandboxBundle/"
     },
     "autoload": {
-        "psr-4": { "danrevah\\SandboxBundle": "" }
+        "psr-4": { "danrevah\\SandboxBundle\\": "" }
     },
     "minimum-stability": "dev"
 }
