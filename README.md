@@ -22,17 +22,31 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
 
 ## Create a Sandbox environment
 
-1. Copy the file from your `project-root-directory/web/app_dev.php` and call the new file `app_sandbox.php`.
-2. In the `app_sandbox.php` file change ```php $kernel = new AppKernel('dev', true); ``` to `$kernel = new AppKernel('sandbox', true);`
-3. Go to `project-root-directory/app/AppKernel.php` and change this line `in_array($this->getEnvironment(), array('dev', 'test')` to `in_array($this->getEnvironment(), array('dev', 'test', 'sandbox')`.
-4. In the AppKernel.php file after the if case you've just edited add this case also
+1. Copy the file from your `project-root-directory/web/app_dev.php` into the same directory and call the new file `app_sandbox.php`.
+2. In the file you've just created `app_sandbox.php` change this line
+```php 
+    $kernel = new AppKernel('dev', true); 
+``` 
+to 
+```php
+    $kernel = new AppKernel('sandbox', true);
+```
+3. Go to `project-root-directory/app/AppKernel.php` and change this line  
+```php
+    if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+```
+to 
+```php
+    if (in_array($this->getEnvironment(), array('dev', 'test','sandbox'))) {
+```
+4. In the AppKernel.php file after the `if case` you've just edited, add this `if case` also:
 ```php
     if (in_array($this->getEnvironment(), array('sandbox'))) {
         $bundles[] = new danrevah\SandboxBundle\SandboxBundle();
     }
 ```
 5. Copy the file from `project-root-directory/app/config/config_dev.yml` and call it `config_sandbox.yml`.
-6. Add this to your `config_sandbox.yml`
+6. Add this to the end of your `config_sandbox.yml`
 ```yml
     sandbox:
       response:
