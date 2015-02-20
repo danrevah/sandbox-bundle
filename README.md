@@ -32,7 +32,7 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
     }
 ```
 * Copy the file from `project-root-directory/app/config/config_dev.yml` and call it `config_sandbox.yml`.
-* Add this to the end of your `config_sandbox.yml`
+* Add this to the end of your `config_sandbox.yml`:
 ```yml
     sandbox:
       response:
