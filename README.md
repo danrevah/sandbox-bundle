@@ -37,6 +37,9 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
 ```yml
     sandbox:
       response:
-        force: true # Force mode means you won't be able to fall to the REAL controller if path's annotation not found.
+        force: true
+        # Force mode means you won't be able to "fall"
+        # to the REAL controller if a Sandbox response is not available.
+        # It will produce an error instead.
 ```
 8. That's it! you can now access your sandbox environment using `app_sandbox.php`
