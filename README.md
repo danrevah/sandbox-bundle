@@ -2,11 +2,15 @@
 [![Build Status](https://travis-ci.org/danrevah/SandboxBundle.svg?branch=master)](https://travis-ci.org/danrevah/SandboxBundle)
 
 > Symfony2 SandboxBundle
-> used for creating a Sandbox enviorment and response for API
+> it's mostly used in conditions when you don't want to reach your real controller on a sandbox enviorment,
+> for example, if you have a controller which handles a Purchase, 
+> you could use a fake response instead of creating a real purchase request.
 
  * [Installation](#installation)
  * [Create a Sandbox environment](#create-a-sandbox-environment)
-
+ * [Single response annotation](#single-response-annotation)
+ * [Multi response annotation](#multi-response-annotation)
+ * 
 ## Installation
 
 The following instructions outline installation using Composer. If you don't
@@ -42,3 +46,71 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
         # It will produce an error instead.
 ```
 * That's it! you can now access your sandbox environment using `app_sandbox.php`
+
+## Single response annotation
+
+```php
+    /**
+     * GET /resource
+     *
+     * @ApiSandboxResponse(
+     *      responseCode=200,
+     *      type="json",
+     *      parameters={
+     *          {"name"="some_parameter", "required"=true}
+     *      },
+     *      resource="@SandboxBundle/Resources/responses/token.json"
+     * )
+     */
+    public function getAction() {
+        return array('foo');
+    }
+```
+
+* `responseCode` (not required - default 200) - it's the Http response code of the Sandbox response.
+* `type` (not required - default 'json') - you can choose between 'json' and 'xml'.
+* `parameters` (not required) - this is used to validate required parameters in the Sandbox API in order to produce an Exception if the parameter is missing.
+* `resource` (**required**) - the real controller will be overwritten by this, in the above example it will ALWAYS return the contents of the `token.json` instead of the 'foo' from the real getAction(), it won't even go inside.
+
+
+## Multi response annotation
+
+```php
+    /**
+     * POST /resource
+     *
+     * @ApiSandboxMultiResponse(
+     *      responseCode=200,
+     *      type="json",
+     *      parameters={
+     *          {"name"="some_parameter", "required"=true}
+     *      },
+     *      responseFallback={
+     *          "type"="xml",
+     *          "responseCode"=500,
+     *          "resource"="@SandboxBundle/Resources/responses/error.xml"
+     *      },
+     *      multiResponse={
+     *          {
+     *              "type"="xml",
+     *              "resource"="@SandboxBundle/Resources/responses/token.xml",
+     *              "caseParams": {"some_parameter"="1", "some_parameter2"="2"}
+     *          },
+     *          {
+     *              "resource"="@SandboxBundle/Resources/responses/token.json",
+     *              "caseParams": {"some_parameter"="3", "some_parameter2"="4"}
+     *          }
+     *      }
+     * )
+     */
+    public function postAction() {
+        return array('bar');
+    }
+```
+
+* `responseCode` (not required - default 200) - it's the Http response code of the Sandbox response.
+* `type` (not required - default 'json') - you can choose between 'json' and 'xml'.
+* `parameters` (not required) - this is used to validate required parameters in the Sandbox API in order to produce an Exception if the parameter is missing.
+* `multiResponse` (**required**) - used to find matching `parameters` from the request and if the values are equal, it returns a response with the `resource` file mentiond. the parameters `type` and `responseCode` insdie the `multiResponse` are not required it will use the parent parameters if none is found inside a matching case.
+* `responseFallback` (**required**) - it's using this response when none of the `multiResponse` `caseParams` has been matched.
+
