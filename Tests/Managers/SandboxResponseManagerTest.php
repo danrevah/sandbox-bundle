@@ -1,18 +1,19 @@
 <?php
 
-namespace danrevah\SandboxBundle\Tests\Managers;
-
 use danrevah\SandboxBundle\Managers\SandboxResponseManager;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
-use KernelAwareTest;
-use ReflectionMethod;
 use ShortifyPunit\ShortifyPunit;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use danrevah\SandboxBundle\Annotation\ApiSandboxResponse;
 use danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse;
+
+// Fake appKernel for testing
+class AppKernel {
+    public function locateResource($a) {}
+}
 
 class testObject
 {
@@ -65,8 +66,11 @@ class testObject
     }
 }
 
-class SandboxResponseManagerTest extends KernelAwareTest
+class SandboxResponseManagerTest extends WebTestCase
 {
+    private static $XML_PATH = 'Resources/responses/token.xml';
+    private static $JSON_PATH = 'Resources/responses/token.json';
+
     /**
      * @expectedException \Exception
      */
@@ -114,11 +118,8 @@ class SandboxResponseManagerTest extends KernelAwareTest
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
         list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
-
-        $path = self::$kernel->locateResource('@SandboxBundle/Resources/responses/token.json');
-        $contentReal = json_decode(file_get_contents($path), 1);
-
-        $this->assertEquals($contentReal, $content);
+        $jsonFile = json_decode(file_get_contents(self::$JSON_PATH), 1);
+        $this->assertEquals($jsonFile, $content);
         $this->assertEquals($type, 'json');
         $this->assertEquals($statusCode, 200);
     }
@@ -161,10 +162,10 @@ class SandboxResponseManagerTest extends KernelAwareTest
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
         list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
-        $path = self::$kernel->locateResource('@SandboxBundle/Resources/responses/token.json');
-        $contentReal = json_decode(file_get_contents($path), 1);
+        $jsonFile = json_decode(file_get_contents(self::$JSON_PATH), 1);
+        $xmlFile = file_get_contents(self::$XML_PATH);
 
-        $this->assertEquals($contentReal, $content);
+        $this->assertEquals($jsonFile, $content);
         $this->assertEquals($type, 'json');
         $this->assertEquals($statusCode, 200);
 
@@ -216,22 +217,19 @@ class SandboxResponseManagerTest extends KernelAwareTest
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
 
-        $path = self::$kernel->locateResource('@SandboxBundle/Resources/responses/token.xml');
-        $contentRealXml = file_get_contents($path);
-
         $request = new ParameterBag(['some_parameter' => 1, 'some_parameter2'=>2]);
         list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
         $this->assertEquals($type, 'xml');
         $this->assertEquals($statusCode, 200);
-        $this->assertEquals($contentRealXml, $content);
+        $this->assertEquals($xmlFile, $content);
 
         $request = new ParameterBag(['some_parameter' => 3, 'some_parameter2'=>4]);
         list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
         $this->assertEquals($type, 'json');
         $this->assertEquals($statusCode, 200);
-        $this->assertEquals($contentReal, $content);
+        $this->assertEquals($jsonFile, $content);
 
         // [4] Testing with fallback
         $request = new ParameterBag(['some_parameter' => 5, 'some_parameter2'=>6]);
@@ -239,7 +237,7 @@ class SandboxResponseManagerTest extends KernelAwareTest
 
         $this->assertEquals($type, 'json');
         $this->assertEquals($statusCode, 404);
-        $this->assertEquals($contentReal, $content);
+        $this->assertEquals($jsonFile, $content);
 
     }
 
@@ -258,10 +256,13 @@ class SandboxResponseManagerTest extends KernelAwareTest
         }
 
         // Mocking the sandbox response manager dependencies
+        $kernel = ShortifyPunit::mock('AppKernel');
         $mockedContainer = ShortifyPunit::mock('Symfony\Component\DependencyInjection\Container');
         ShortifyPunit::when($mockedContainer)->getParameter('sandbox.response.force')->returns($force);
 
+        ShortifyPunit::when($kernel)->locateResource('@SandboxBundle/Resources/responses/token.xml')->returns(self::$XML_PATH);
+        ShortifyPunit::when($kernel)->locateResource('@SandboxBundle/Resources/responses/token.json')->returns(self::$JSON_PATH);
         // Create manager
-        return new SandboxResponseManager(static::$kernel, $mockedContainer, $annotationsReader);
+        return new SandboxResponseManager($kernel, $mockedContainer, $annotationsReader);
     }
 }

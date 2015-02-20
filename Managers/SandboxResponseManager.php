@@ -34,7 +34,7 @@ class SandboxResponseManager {
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      * @param \Doctrine\Common\Annotations\AnnotationReader $annotationsReader
      */
-    public function __construct(KernelInterface $kernel, ContainerInterface $container, AnnotationReader $annotationsReader)
+    public function __construct($kernel, ContainerInterface $container, AnnotationReader $annotationsReader)
     {
         $this->kernel = $kernel;
         $this->container = $container;
