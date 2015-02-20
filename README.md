@@ -24,16 +24,15 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
 
 1. Copy the file from your `project-root-directory/web/app_dev.php` and call the new file `app_sandbox.php`.
 2. In the `app_sandbox.php` file change `$kernel = new AppKernel('dev', true);` to `$kernel = new AppKernel('sandbox', true);`
-3. Copy the file from your `project-root-directory/app/config_dev.yml` and call it `config_sandbox.yml`.
-4. Go to `project-root-directory/app/AppKernel.php` and change this line `in_array($this->getEnvironment(), array('dev', 'test')` to `in_array($this->getEnvironment(), array('dev', 'test', 'sandbox')`.
-5. In the AppKernel.php file after the if case you've just edited add this case also
+3. Go to `project-root-directory/app/AppKernel.php` and change this line `in_array($this->getEnvironment(), array('dev', 'test')` to `in_array($this->getEnvironment(), array('dev', 'test', 'sandbox')`.
+4. In the AppKernel.php file after the if case you've just edited add this case also
 ```php
     if (in_array($this->getEnvironment(), array('sandbox'))) {
         $bundles[] = new danrevah\SandboxBundle\SandboxBundle();
     }
 ```
-6. Copy the file from `project-root-directory/app/config/config_dev.yml` and call it `config_sandbox.yml`.
-7. Add this to your `config_sandbox.yml`
+5. Copy the file from `project-root-directory/app/config/config_dev.yml` and call it `config_sandbox.yml`.
+6. Add this to your `config_sandbox.yml`
 ```yml
     sandbox:
       response:
@@ -42,4 +41,4 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
         # to the REAL controller if a Sandbox response is not available.
         # It will produce an error instead.
 ```
-8. That's it! you can now access your sandbox environment using `app_sandbox.php`
+7. That's it! you can now access your sandbox environment using `app_sandbox.php`
