@@ -5,7 +5,7 @@
 > used for creating a Sandbox enviorment and response for API
 
  * [Installation](#installation)
- * [Creating a Sandbox environment](#creating-a-sandbox-environment)
+ * [Create a Sandbox environment](#create-a-sandbox-environment)
 
 ## Installation
 
@@ -20,7 +20,7 @@ $ php composer.phar require "danrevah/sandboxbundle":"1.0.*"
 ```
 
 
-## Creating a Sandbox environment
+## Create a Sandbox environment
 
 1. Copy the file from your `project-root-directory/web/app_dev.php` and call the new file `app_sandbox.php`.
 2. In the `app_sandbox.php` file change `$kernel = new AppKernel('dev', true);` to `$kernel = new AppKernel('sandbox', true);`
