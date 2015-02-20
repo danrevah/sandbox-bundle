@@ -1,5 +1,4 @@
-# SandboxBundle &nbsp;
-[![Build Status](https://travis-ci.org/danrevah/SandboxBundle.svg?branch=master)](https://travis-ci.org/danrevah/SandboxBundle)
+# SandboxBundle &nbsp; [![Build Status](https://travis-ci.org/danrevah/SandboxBundle.svg?branch=master)](https://travis-ci.org/danrevah/SandboxBundle)
 
 > Symfony2 SandboxBundle
 > it's mostly used in conditions when you don't want to reach your real controller on a sandbox enviorment,
