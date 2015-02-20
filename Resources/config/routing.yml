@@ -1,3 +1,0 @@
-sandbox_response_homepage:
-    path:     /testing_fake_sandbox_response
-    defaults: { _controller: SandboxBundle:Default:index }

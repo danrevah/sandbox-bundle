@@ -255,13 +255,7 @@ class SandboxResponseManager {
 
             // Unknown
             default:
-                $forceMode = $this->container->getParameter('sandbox.response.force');
-
-                if ($forceMode) {
-                    throw new RuntimeException('Unknown type of SandboxApiResponse');
-                } else {
-                    return false;
-                }
+               throw new RuntimeException('Unknown type of SandboxApiResponse');
         }
         return [$controller, $content];
     }
