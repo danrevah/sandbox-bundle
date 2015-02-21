@@ -76,7 +76,7 @@ class SandboxResponseManager {
             'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse'
         );
 
-        if( ! $apiResponseAnnotation && ! $apiResponseMultiAnnotation) {
+        if ( ! $apiResponseAnnotation && ! $apiResponseMultiAnnotation) {
             // Disabled exception, continue to real controller
             $forceMode = $this->container->getParameter('sandbox.response.force');
 
@@ -91,8 +91,7 @@ class SandboxResponseManager {
             }
         }
 
-        $parameters = $apiResponseAnnotation ? $apiResponseAnnotation->parameters :
-            $apiResponseMultiAnnotation->parameters;
+        $parameters = $apiResponseAnnotation ? $apiResponseAnnotation->parameters : $apiResponseMultiAnnotation->parameters;
 
         // Validating with Annotation syntax
         $this->validateParamsArray($parameters, $rawRequest, $request, $query);
@@ -112,7 +111,7 @@ class SandboxResponseManager {
             );
         }
 
-        list($type, $statusCode, $responsePath) = $this->extractRealParams($responsePath, $apiResponseMultiAnnotation,$type, $statusCode);
+        list($type, $statusCode, $responsePath) = $this->extractRealParams($responsePath, $apiResponseMultiAnnotation, $type, $statusCode);
         list($controller, $content) = $this->getControllerResponseByResource($responsePath, $type, $statusCode);
 
         return [$controller, $content, $type, $statusCode];
@@ -174,7 +173,7 @@ class SandboxResponseManager {
             // Validating if required parameters are missing
             if (array_key_exists('required', $options) && $options['required'] &&
                 ( ! $request->has($options['name']) && ! $query->has($options['name']) &&
-                    ! $rawRequest->containsKey($options['name']) )
+                    ! $rawRequest->containsKey($options['name']))
             ) {
                 throw new \InvalidArgumentException('Missing parameters');
             }
@@ -199,14 +198,14 @@ class SandboxResponseManager {
             case ApiSandboxResponseTypeEnum::JSON_RESPONSE:
                 $content = json_decode($content, 1);
 
-                $controller = function () use ($content, $statusCode) {
+                $controller = function() use ($content, $statusCode) {
                     return new JsonResponse($content, $statusCode);
                 };
                 break;
 
             // XML
             case ApiSandboxResponseTypeEnum::XML_RESPONSE:
-                $controller = function () use ($content, $statusCode) {
+                $controller = function() use ($content, $statusCode) {
                     $response = new Response($content, $statusCode);
                     $response->headers->set('Content-Type', 'text/xml');
                     return $response;
