@@ -78,5 +78,4 @@ class SandboxListener
         $streamParams = $requestArray === null ? new ArrayCollection() : new ArrayCollection($requestArray);
         return $streamParams;
     }
-
 }

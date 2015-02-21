@@ -64,5 +64,4 @@ final class ApiSandboxMultiResponse extends Annotation
      *      }
      */
     public $parameters = [];
-
 }
