@@ -1,5 +1,6 @@
 <?php
 namespace SandboxBundle\Tests\DependencyInjection;
+
 use danrevah\SandboxBundle\DependencyInjection\Configuration;
 use danrevah\SandboxBundle\EventListener\SandboxListener;
 use ShortifyPunit\ShortifyPunit;

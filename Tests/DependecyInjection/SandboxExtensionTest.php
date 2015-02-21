@@ -1,5 +1,6 @@
 <?php
 namespace SandboxBundle\Tests\DependencyInjection;
+
 use danrevah\SandboxBundle\DependencyInjection\SandboxExtension;
 use ShortifyPunit\ShortifyPunit;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

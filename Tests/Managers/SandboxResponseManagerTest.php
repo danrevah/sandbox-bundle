@@ -259,14 +259,13 @@ class SandboxResponseManagerTest extends WebTestCase
      */
     public function testSandboxResponseForceException()
     {
-        $sandboxResponseManager = $this->createManager(true);
+        $force = true;
+        $sandboxResponseManager = $this->createManager($force);
 
-        $request = new ParameterBag();
-        $query = new ParameterBag();
+        $request = $query = new ParameterBag();
         $rawRequest = new ArrayCollection();
-
         $object = new testObject();
-        $method = 'notAnnotatedFunction';
+        $method = 'annotated';
 
         $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
