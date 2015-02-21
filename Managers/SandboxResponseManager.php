@@ -257,14 +257,26 @@ class SandboxResponseManager {
 
         // Validate Params with GET, POST, and RAW
         foreach ($resource['caseParams'] as $paramName => $paramValue) {
-            if (($query->has($paramName) && $query->get($paramName) == $paramValue) ||
-                ($request->has($paramName) && $request->get($paramName) == $paramValue) ||
-                ($streamParams->containsKey($paramName) && $streamParams->get($paramName) == $paramValue)
-            ) {
+            if ($this->existsInQuery($paramName, $paramValue, $streamParams, $request, $query)) {
                 $validateCaseParams++;
             }
         }
         return $validateCaseParams;
+    }
+
+    /**
+     * @param $paramName
+     * @param $paramValue
+     * @param $streamParams
+     * @param $request
+     * @param $query
+     * @return bool
+     */
+    private function existsInQuery($paramName, $paramValue, ArrayCollection $streamParams, ParameterBag $request, ParameterBag $query)
+    {
+        return ($query->has($paramName) && $query->get($paramName) == $paramValue) ||
+                 ($request->has($paramName) && $request->get($paramName) == $paramValue) ||
+                 ($streamParams->containsKey($paramName) && $streamParams->get($paramName) == $paramValue);
     }
 
     /**
