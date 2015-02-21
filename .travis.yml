@@ -13,6 +13,7 @@ matrix:
   fast_finish: true
 
 env:
+  - SYMFONY_VERSION="2.4.*" DB=mysql
   - SYMFONY_VERSION="2.5.*" DB=mysql
   - SYMFONY_VERSION="2.6.*" DB=mysql
   - SYMFONY_VERSION="2.7.*" DB=mysql
@@ -21,9 +22,7 @@ install:
   - composer self-update
   - composer install
   - composer require symfony/framework-bundle:${SYMFONY_VERSION}
-  - composer require symfony/expression-language
   - composer require doctrine/common
-  - composer require satooshi/php-coveralls
 
 before_script:
   - mkdir -p build/logs
