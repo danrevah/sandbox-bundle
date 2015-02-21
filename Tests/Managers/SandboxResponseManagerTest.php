@@ -6,10 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use ShortifyPunit\ShortifyPunit;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use danrevah\SandboxBundle\Annotation\ApiSandboxResponse;
-use danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse;
 
 // Fake appKernel for testing
 class AppKernel {
@@ -128,7 +125,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
     /**
@@ -171,7 +168,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
 
@@ -214,7 +211,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
 
@@ -253,7 +250,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
     }
 
@@ -347,7 +344,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        list(, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
         $jsonFile = json_decode(file_get_contents(self::$JSON_PATH), 1);
         $xmlFile = file_get_contents(self::$XML_PATH);
@@ -372,7 +369,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        list(, , $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
         $this->assertEquals($type, 'xml');
         $this->assertEquals($statusCode, 500);
@@ -422,7 +419,7 @@ class SandboxResponseManagerTest extends WebTestCase
 
         // [4] Testing with fallback
         $request = new ParameterBag(['some_parameter' => 5, 'some_parameter2'=>6]);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        list(, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
         $this->assertEquals($type, 'json');
         $this->assertEquals($statusCode, 404);
@@ -465,7 +462,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
     /**
