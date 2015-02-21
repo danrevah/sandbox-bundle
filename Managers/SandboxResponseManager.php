@@ -143,20 +143,12 @@ class SandboxResponseManager {
         $resourcePath = null;
 
         foreach ($apiResponseMultiAnnotation->multiResponse as $resource) {
+
             if ( ! isset($resource['caseParams']) || ! isset($resource['resource'])) {
                 throw new RunTimeException('Each multi response must have caseParams and resource property');
             }
-            $validateCaseParams = 0;
 
-            // Validate Params with GET, POST, and RAW
-            foreach ($resource['caseParams'] as $paramName => $paramValue) {
-                if (($query->has($paramName) && $query->get($paramName) == $paramValue) ||
-                    ($request->has($paramName) && $request->get($paramName) == $paramValue) ||
-                    ($streamParams->containsKey($paramName) && $streamParams->get($paramName) == $paramValue)
-                ) {
-                    $validateCaseParams++;
-                }
-            }
+            $validateCaseParams = $this->countCaseParamsFromQuery($streamParams, $request, $query, $resource);
 
             // Found a match route params
             if (count($resource['caseParams']) == $validateCaseParams) {
@@ -190,7 +182,7 @@ class SandboxResponseManager {
         ParameterBag $query
     ) {
         // search for missing required parameters and throw exception if there's anything missing
-        foreach ($apiDocParams as $param => $options) {
+        foreach ($apiDocParams as $options) {
             // Validating if required parameters are missing
             if (array_key_exists('required', $options) && $options['required'] &&
                 ( ! $request->has($options['name']) && ! $query->has($options['name']) &&
@@ -252,12 +244,8 @@ class SandboxResponseManager {
     {
         // If didn't find route path, fall to responseFallback
         if (is_null($responsePath) && $apiResponseMultiAnnotation) {
-            if (empty($apiResponseMultiAnnotation->responseFallback)) {
-                throw new RuntimeException('Missing `responseFallback` in Sandbox annotation');
-            }
-
-            if (!isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
-                throw new RuntimeException('Missing resource in `responseFallback` Sandbox annotation');
+            if (empty($apiResponseMultiAnnotation->responseFallback) || ! isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
+                throw new RuntimeException('Missing `responseFallback` is not set properly in the Sandbox annotation');
             }
 
             if (isset($apiResponseMultiAnnotation->responseFallback['type'])) {
@@ -272,5 +260,28 @@ class SandboxResponseManager {
 
         }
         return array($type, $statusCode, $responsePath);
+    }
+
+    /**
+     * @param ArrayCollection $streamParams
+     * @param ParameterBag $request
+     * @param ParameterBag $query
+     * @param $resource
+     * @return int
+     */
+    private function countCaseParamsFromQuery(ArrayCollection $streamParams, ParameterBag $request, ParameterBag $query, $resource)
+    {
+        $validateCaseParams = 0;
+
+        // Validate Params with GET, POST, and RAW
+        foreach ($resource['caseParams'] as $paramName => $paramValue) {
+            if (($query->has($paramName) && $query->get($paramName) == $paramValue) ||
+                ($request->has($paramName) && $request->get($paramName) == $paramValue) ||
+                ($streamParams->containsKey($paramName) && $streamParams->get($paramName) == $paramValue)
+            ) {
+                $validateCaseParams++;
+            }
+        }
+        return $validateCaseParams;
     }
 }
