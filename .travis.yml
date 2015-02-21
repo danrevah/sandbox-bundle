@@ -23,6 +23,7 @@ install:
   - composer require symfony/framework-bundle:${SYMFONY_VERSION}
   - composer require symfony/expression-language
   - composer require doctrine/common
+  - composer require satooshi/php-coveralls
 
 before_script:
   - mkdir -p build/logs
