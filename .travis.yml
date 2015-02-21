@@ -18,7 +18,7 @@ env:
   - SYMFONY_VERSION="2.7.*" DB=mysql
 
 install:
-  - composer self-update 
+  - composer self-update
   - composer install
   - composer require symfony/framework-bundle:${SYMFONY_VERSION}
   - composer require doctrine/common
