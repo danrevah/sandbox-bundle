@@ -203,7 +203,7 @@ class SandboxResponseManagerTest extends WebTestCase
         ShortifyPunit::when($annotationsReader)->
             getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
             returns($responseObj);
-        
+
         $this->setExpectedException('\InvalidArgumentException');
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
         $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);

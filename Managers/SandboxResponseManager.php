@@ -147,14 +147,7 @@ class SandboxResponseManager {
 
             // Found a match route params
             if (count($resource['caseParams']) == $validateCaseParams) {
-                // Override parent type if has child type
-                if (isset($resource['type'])) {
-                    $type = $resource['type'];
-                }
-                if (isset($resource['responseCode'])) {
-                    $responseCode = $resource['responseCode'];
-                }
-                $resourcePath = $resource['resource'];
+                list($type, $responseCode, $resourcePath) = $this->extractResource($resource, $type, $responseCode);
                 // If found route break loop
                 break;
             }
@@ -278,5 +271,24 @@ class SandboxResponseManager {
             }
         }
         return $validateCaseParams;
+    }
+
+    /**
+     * @param $resource
+     * @param $type
+     * @param $responseCode
+     * @return array
+     */
+    private function extractResource($resource, $type, $responseCode)
+    {
+        // Override parent type if has child type
+        if (isset($resource['type'])) {
+            $type = $resource['type'];
+        }
+        if (isset($resource['responseCode'])) {
+            $responseCode = $resource['responseCode'];
+        }
+        $resourcePath = $resource['resource'];
+        return array($type, $responseCode, $resourcePath);
     }
 }
