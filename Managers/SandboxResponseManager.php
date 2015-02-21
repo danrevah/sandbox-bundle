@@ -106,27 +106,7 @@ class SandboxResponseManager {
             $query
         );
 
-        // If didn't find route path, fall to responseFallback
-        if (is_null($responsePath) && $apiResponseMultiAnnotation) {
-            if (empty($apiResponseMultiAnnotation->responseFallback)) {
-                throw new RuntimeException('Missing `responseFallback` in Sandbox annotation');
-            }
-
-            if ( ! isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
-                throw new RuntimeException('Missing resource in `responseFallback` Sandbox annotation');
-            }
-
-            if (isset($apiResponseMultiAnnotation->responseFallback['type'])) {
-                $type = $apiResponseMultiAnnotation->responseFallback['type'];
-            }
-
-            if (isset($apiResponseMultiAnnotation->responseFallback['responseCode'])) {
-                $statusCode = $apiResponseMultiAnnotation->responseFallback['responseCode'];
-            }
-
-            $responsePath = $apiResponseMultiAnnotation->responseFallback['resource'];
-        }
-
+        list($type, $statusCode, $responsePath) = $this->extractRealParams($responsePath, $apiResponseMultiAnnotation,$type, $statusCode);
         list($controller, $content) = $this->getControllerResponseByResource($responsePath, $type, $statusCode);
 
         return [$controller, $content, $type, $statusCode];
@@ -258,5 +238,39 @@ class SandboxResponseManager {
                throw new RuntimeException('Unknown type of SandboxApiResponse');
         }
         return [$controller, $content];
+    }
+
+    /**
+     * @param $responsePath
+     * @param $apiResponseMultiAnnotation
+     * @param $type
+     * @param $statusCode
+     * @throws \RuntimeException
+     * @return array
+     */
+    private function extractRealParams($responsePath, $apiResponseMultiAnnotation, $type, $statusCode)
+    {
+        // If didn't find route path, fall to responseFallback
+        if (is_null($responsePath) && $apiResponseMultiAnnotation) {
+            if (empty($apiResponseMultiAnnotation->responseFallback)) {
+                throw new RuntimeException('Missing `responseFallback` in Sandbox annotation');
+            }
+
+            if (!isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
+                throw new RuntimeException('Missing resource in `responseFallback` Sandbox annotation');
+            }
+
+            if (isset($apiResponseMultiAnnotation->responseFallback['type'])) {
+                $type = $apiResponseMultiAnnotation->responseFallback['type'];
+            }
+
+            if (isset($apiResponseMultiAnnotation->responseFallback['responseCode'])) {
+                $statusCode = $apiResponseMultiAnnotation->responseFallback['responseCode'];
+            }
+
+            $responsePath = $apiResponseMultiAnnotation->responseFallback['resource'];
+
+        }
+        return array($type, $statusCode, $responsePath);
     }
 }
