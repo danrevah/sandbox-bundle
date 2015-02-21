@@ -3,7 +3,8 @@
     "description": "SandboxBundle",
     "require": {
         "php": ">=5.4.0",
-        "danrevah/shortifypunit": "1.0.*"
+        "danrevah/shortifypunit": "1.0.*",
+        "satooshi/php-coveralls": "0.7.*@dev"
     },
         "homepage": "https://github.com/danrevah/SandboxBundle",
         "license": "MIT",

@@ -9,6 +9,7 @@ php:
 matrix:
   allow_failures:
     - php: hhvm
+    - php: 5.4
   fast_finish: true
 
 env:
