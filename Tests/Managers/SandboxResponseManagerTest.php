@@ -410,7 +410,7 @@ class SandboxResponseManagerTest extends WebTestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $callable());
 
         $request = new ParameterBag(['some_parameter' => 3, 'some_parameter2'=>4]);
-        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        list(, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
         $this->assertEquals($type, 'json');
         $this->assertEquals($statusCode, 200);
@@ -473,7 +473,7 @@ class SandboxResponseManagerTest extends WebTestCase
      */
     private function createManager($force, $annotationsReader = false)
     {
-        if ($annotationsReader === false) {
+        if ( ! $annotationsReader instanceof AnnotationReader) {
             $annotationsReader = new AnnotationReader();
         }
 
