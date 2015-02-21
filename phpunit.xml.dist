@@ -10,20 +10,33 @@
         stopOnFailure               = "false"
         syntaxCheck                 = "false"
         bootstrap                   = "Tests/bootstrap.php">
+
     <testsuites>
         <testsuite name="SandboxBundle test suite">
             <directory suffix="Test.php">./Tests</directory>
         </testsuite>
     </testsuites>
 
-    <!--<logging>
+    <logging>
         <log type="coverage-html" target="build/coverage"/>
-    </logging>-->
+    </logging>
 
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
+        <whitelist>
+            <directory suffix=".php">../</directory>
+            <exclude>
+                <directory>./Tests</directory> <!-- Ignore tests in code coverage -->
+                <directory>./vendor</directory> <!-- Ignore vendor in code coverage -->
+            </exclude>
         </whitelist>
     </filter>
 
 </phpunit>
+
+
+
+
+
+
+
+

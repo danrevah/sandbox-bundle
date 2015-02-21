@@ -71,6 +71,189 @@ class SandboxResponseManagerTest extends WebTestCase
     private static $XML_PATH = 'Resources/responses/token.xml';
     private static $JSON_PATH = 'Resources/responses/token.json';
 
+    public function testSandboxResponseNotForced()
+    {
+        $sandboxResponseManager = $this->createManager(false);
+
+        $request = new ParameterBag();
+        $query = new ParameterBag();
+        $rawRequest = new ArrayCollection();
+
+        $object = new testObject();
+        $method = 'notAnnotatedFunction';
+
+        $response = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        $this->assertFalse($response);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testConfigurationFallbackException()
+    {
+        $request = new ParameterBag(['some_parameter' => 1, 'some_parameter2'=>2]);
+        $query = new ParameterBag();
+        $rawRequest = new ArrayCollection();
+
+        $object = new testObject();
+        $method = 'annotatedResponseFunction';
+
+        $annotationsReader = ShortifyPunit::mock('Doctrine\Common\Annotations\AnnotationReader');
+
+        $responseObj = new \StdClass();
+        $responseObj->parameters = [['name'=>'some_parameter', 'required'=>true]];
+        $responseObj->type = 'json';
+        $responseObj->responseCode = 200;
+
+        $responseObj->multiResponse = [
+            [
+                'resource' => '@SandboxBundle/Resources/responses/token.json',
+                'caseParams' => ['some_parameter'=>3, 'some_parameter2'=>4]
+            ]
+        ];
+
+        $responseObj->responseFallback = [
+            'responseCode' => 404,
+        ];
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxResponse')->
+            returns(false);
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
+            returns($responseObj);
+
+        $sandboxResponseManager = $this->createManager(true, $annotationsReader);
+        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testUnknownResponseType()
+    {
+        $request = new ParameterBag(['some_parameter' => 1, 'some_parameter2'=>2]);
+        $query = new ParameterBag();
+        $rawRequest = new ArrayCollection();
+
+        $object = new testObject();
+        $method = 'annotatedResponseFunction';
+
+        $annotationsReader = ShortifyPunit::mock('Doctrine\Common\Annotations\AnnotationReader');
+
+        $responseObj = new \StdClass();
+        $responseObj->parameters = [['name'=>'some_parameter', 'required'=>true]];
+        $responseObj->type = 'some_unknown_response_type';
+        $responseObj->responseCode = 200;
+
+        $responseObj->multiResponse = [
+            [
+                'resource' => '@SandboxBundle/Resources/responses/token.json',
+                'caseParams' => ['some_parameter'=>3, 'some_parameter2'=>4]
+            ]
+        ];
+
+        $responseObj->responseFallback = [
+            'resource' => '@SandboxBundle/Resources/responses/token.json',
+            'responseCode' => 404,
+        ];
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxResponse')->
+            returns(false);
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
+            returns($responseObj);
+
+        $sandboxResponseManager = $this->createManager(true, $annotationsReader);
+        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+    }
+
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testMissingParameters()
+    {
+        $request = new ParameterBag();
+        $query = new ParameterBag();
+        $rawRequest = new ArrayCollection();
+
+        $object = new testObject();
+        $method = 'annotatedResponseFunction';
+
+        $annotationsReader = ShortifyPunit::mock('Doctrine\Common\Annotations\AnnotationReader');
+
+        $responseObj = new \StdClass();
+        $responseObj->parameters = [['name'=>'some_parameter', 'required'=>true]];
+        $responseObj->type = 'json';
+        $responseObj->responseCode = 200;
+
+        $responseObj->multiResponse = [
+            [
+                'resource' => '@SandboxBundle/Resources/responses/token.json',
+                'caseParams' => ['some_parameter'=>3, 'some_parameter2'=>4]
+            ]
+        ];
+
+        $responseObj->responseFallback = [
+            'responseCode' => 404,
+        ];
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxResponse')->
+            returns(false);
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
+            returns($responseObj);
+
+        $sandboxResponseManager = $this->createManager(true, $annotationsReader);
+        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+    }
+
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testConfigurationResourceFallbackException()
+    {
+        $request = new ParameterBag(['some_parameter' => 1, 'some_parameter2'=>2]);
+        $query = new ParameterBag();
+        $rawRequest = new ArrayCollection();
+
+        $object = new testObject();
+        $method = 'annotatedResponseFunction';
+
+        $annotationsReader = ShortifyPunit::mock('Doctrine\Common\Annotations\AnnotationReader');
+
+        $responseObj = new \StdClass();
+        $responseObj->parameters = [['name'=>'some_parameter', 'required'=>true]];
+        $responseObj->type = 'json';
+        $responseObj->responseCode = 200;
+
+        $responseObj->multiResponse = [
+            [
+                'resource' => '@SandboxBundle/Resources/responses/token.json',
+                'caseParams' => ['some_parameter'=>3, 'some_parameter2'=>4]
+            ]
+        ];
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxResponse')->
+            returns(false);
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
+            returns($responseObj);
+
+        $sandboxResponseManager = $this->createManager(true, $annotationsReader);
+        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+
+    }
+
     /**
      * @expectedException \Exception
      */
@@ -122,6 +305,7 @@ class SandboxResponseManagerTest extends WebTestCase
         $this->assertEquals($jsonFile, $content);
         $this->assertEquals($type, 'json');
         $this->assertEquals($statusCode, 200);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $callable());
     }
 
     /**
@@ -207,6 +391,7 @@ class SandboxResponseManagerTest extends WebTestCase
         ];
 
         $responseObj->responseFallback = [
+            'type' => 'json',
             'responseCode' => 404,
             'resource' => '@SandboxBundle/Resources/responses/token.json'
         ];
@@ -223,6 +408,7 @@ class SandboxResponseManagerTest extends WebTestCase
         $this->assertEquals($type, 'xml');
         $this->assertEquals($statusCode, 200);
         $this->assertEquals($xmlFile, $content);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $callable());
 
         $request = new ParameterBag(['some_parameter' => 3, 'some_parameter2'=>4]);
         list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
@@ -241,6 +427,43 @@ class SandboxResponseManagerTest extends WebTestCase
 
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testSandboxMultiResponseException()
+    {
+        // [1] Check basic multiResponse with one response by params
+        $request = new ParameterBag(['some_parameter' => 3, 'some_parameter2'=>4]);
+        $query = new ParameterBag();
+        $rawRequest = new ArrayCollection();
+
+        $object = new testObject();
+        $method = 'annotatedResponseFunction';
+
+        $annotationsReader = ShortifyPunit::mock('Doctrine\Common\Annotations\AnnotationReader');
+
+        $responseObj = new \StdClass();
+        $responseObj->parameters = [['name'=>'some_parameter', 'required'=>true]];
+        $responseObj->type = 'json';
+        $responseObj->responseCode = 200;
+
+        $responseObj->multiResponse = [
+            [
+                'resource' => '@SandboxBundle/Resources/responses/token.json',
+            ]
+        ];
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxResponse')->
+            returns(false);
+
+        ShortifyPunit::when($annotationsReader)->
+            getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
+            returns($responseObj);
+
+        $sandboxResponseManager = $this->createManager(true, $annotationsReader);
+        list($callable, $content, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+    }
 
     /**
      * Creating sandboxResponseManager with dependencies
