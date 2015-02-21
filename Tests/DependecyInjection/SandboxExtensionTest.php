@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class SandboxExtensionTest extends WebTestCase
 {
 
-    // Test for code coverage only testing that there's not Exceptions with the configuration 
+    // Test for code coverage only testing that there's not Exceptions with the configuration
     public function testLoad()
     {
         $containerBuilder = ShortifyPunit::mock('Symfony\Component\DependencyInjection\ContainerBuilder');
