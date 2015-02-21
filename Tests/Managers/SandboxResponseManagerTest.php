@@ -128,9 +128,6 @@ class SandboxResponseManagerTest extends WebTestCase
         $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testUnknownResponseType()
     {
         $request = new ParameterBag(['some_parameter' => 1, 'some_parameter2'=>2]);
@@ -166,15 +163,12 @@ class SandboxResponseManagerTest extends WebTestCase
         ShortifyPunit::when($annotationsReader)->
             getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
             returns($responseObj);
-
+        $this->setExpectedException('\RuntimeException');
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
         $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testMissingParameters()
     {
         $request = new ParameterBag();
@@ -209,15 +203,12 @@ class SandboxResponseManagerTest extends WebTestCase
         ShortifyPunit::when($annotationsReader)->
             getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
             returns($responseObj);
-
+        
+        $this->setExpectedException('\InvalidArgumentException');
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
         $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
-
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testConfigurationResourceFallbackException()
     {
         $request = new ParameterBag(['some_parameter' => 1, 'some_parameter2'=>2]);
@@ -249,14 +240,12 @@ class SandboxResponseManagerTest extends WebTestCase
             getMethodAnnotation(anInstanceOf('ReflectionMethod'), 'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse')->
             returns($responseObj);
 
+        $this->setExpectedException('\RuntimeException');
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
         $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testSandboxResponseForceException()
     {
         $force = true;
@@ -267,6 +256,7 @@ class SandboxResponseManagerTest extends WebTestCase
         $object = new testObject();
         $method = 'annotated';
 
+        $this->setExpectedException('\Exception');
         $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 

@@ -97,14 +97,20 @@ class SandboxResponseManager {
         // Validating with Annotation syntax
         $this->validateParamsArray($parameters, $rawRequest, $request, $query);
 
-        // Get response
-        list($responsePath, $type, $statusCode) = $this->getResource(
-            $apiResponseAnnotation,
-            $apiResponseMultiAnnotation,
-            $rawRequest,
-            $request,
-            $query
-        );
+        // Single response annotation is checked first
+        if ($apiResponseAnnotation) {
+            $responsePath = $apiResponseAnnotation->resource;
+            $type = $apiResponseAnnotation->type;
+            $statusCode = $apiResponseAnnotation->responseCode;
+        } else {
+            // Get response
+            list($responsePath, $type, $statusCode) = $this->getResource(
+                $apiResponseMultiAnnotation,
+                $rawRequest,
+                $request,
+                $query
+            );
+        }
 
         list($type, $statusCode, $responsePath) = $this->extractRealParams($responsePath, $apiResponseMultiAnnotation,$type, $statusCode);
         list($controller, $content) = $this->getControllerResponseByResource($responsePath, $type, $statusCode);
@@ -113,7 +119,6 @@ class SandboxResponseManager {
     }
 
     /**
-     * @param ApiSandboxResponse $apiResponseAnnotation
      * @param ApiSandboxMultiResponse $apiResponseMultiAnnotation
      * @param $streamParams
      * @param $request
@@ -122,21 +127,11 @@ class SandboxResponseManager {
      * @return array
      */
     private function getResource(
-        $apiResponseAnnotation,
         $apiResponseMultiAnnotation,
         ArrayCollection $streamParams,
         ParameterBag $request,
         ParameterBag $query
     ) {
-        // Single response annotation is checked first
-        if ($apiResponseAnnotation) {
-            return [
-                $apiResponseAnnotation->resource,
-                $apiResponseAnnotation->type,
-                $apiResponseAnnotation->responseCode
-            ];
-        }
-
         // parent type, and responseCode
         $type = $apiResponseMultiAnnotation->type;
         $responseCode = $apiResponseMultiAnnotation->responseCode;

@@ -12,6 +12,6 @@ class ConfigurationTest extends WebTestCase
     public function testOnKernelController()
     {
         $configuration = new Configuration();
-        $tree = $configuration->getConfigTreeBuilder();
+        $configuration->getConfigTreeBuilder();
     }
 }
