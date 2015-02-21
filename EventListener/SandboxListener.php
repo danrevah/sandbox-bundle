@@ -75,7 +75,7 @@ class SandboxListener
         // get parameters from stream
         $request = $this->request->getContent();
         $requestArray = json_decode($request, true);
-        $streamParams = is_null($requestArray) ? new ArrayCollection() : new ArrayCollection($requestArray);
+        $streamParams = $requestArray === null ? new ArrayCollection() : new ArrayCollection($requestArray);
         return $streamParams;
     }
 

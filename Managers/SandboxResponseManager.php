@@ -231,7 +231,7 @@ class SandboxResponseManager {
     private function extractRealParams($responsePath, $apiResponseMultiAnnotation, $type, $statusCode)
     {
         // If didn't find route path, fall to responseFallback
-        if (is_null($responsePath) && $apiResponseMultiAnnotation) {
+        if ($responsePath === null && $apiResponseMultiAnnotation) {
             if (empty($apiResponseMultiAnnotation->responseFallback) || ! isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
                 throw new RuntimeException('Missing `responseFallback` is not set properly in the Sandbox annotation');
             }
