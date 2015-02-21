@@ -358,7 +358,7 @@ class SandboxResponseManagerTest extends WebTestCase
             returns($responseObj);
 
         $sandboxResponseManager = $this->createManager(true, $annotationsReader);
-        list(, , $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
+        list(,, $type, $statusCode) = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
 
         $this->assertEquals($type, 'xml');
         $this->assertEquals($statusCode, 500);
