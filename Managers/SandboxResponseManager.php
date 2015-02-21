@@ -274,9 +274,7 @@ class SandboxResponseManager {
      */
     private function existsInQuery($paramName, $paramValue, ArrayCollection $streamParams, ParameterBag $request, ParameterBag $query)
     {
-        return ($query->has($paramName) && $query->get($paramName) == $paramValue) ||
-                 ($request->has($paramName) && $request->get($paramName) == $paramValue) ||
-                 ($streamParams->containsKey($paramName) && $streamParams->get($paramName) == $paramValue);
+        return ($query->get($paramName) == $paramValue) || $request->get($paramName) == $paramValue || $streamParams->get($paramName) == $paramValue;
     }
 
     /**
