@@ -1,4 +1,4 @@
-# SandboxBundle &nbsp; [![Build Status](https://travis-ci.org/danrevah/SandboxBundle.svg?branch=master)](https://travis-ci.org/danrevah/SandboxBundle) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/?branch=master)
+# SandboxBundle &nbsp; [![Build Status](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/?branch=master)
 
 > Symfony2 SandboxBundle
 > is mostly used in conditions when you don't want to reach your real controller on a sandbox enviorment,
