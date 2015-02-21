@@ -9,7 +9,7 @@ php:
 matrix:
   allow_failures:
     - php: hhvm
-  fast_finish: true
+  fast_finish: true 
 
 env:
   - SYMFONY_VERSION="2.4.*" DB=mysql
