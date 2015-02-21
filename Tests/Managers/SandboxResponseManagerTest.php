@@ -1,4 +1,5 @@
 <?php
+namespace SandboxBundle\Tests\Managers;
 
 use danrevah\SandboxBundle\Managers\SandboxResponseManager;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -12,7 +13,9 @@ use danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse;
 
 // Fake appKernel for testing
 class AppKernel {
-    public function locateResource($a) {}
+    public function locateResource($a) {
+        return $a;
+    }
 }
 
 class testObject
@@ -479,7 +482,7 @@ class SandboxResponseManagerTest extends WebTestCase
         }
 
         // Mocking the sandbox response manager dependencies
-        $kernel = ShortifyPunit::mock('AppKernel');
+        $kernel = ShortifyPunit::mock('SandboxBundle\Tests\Managers\AppKernel');
         $mockedContainer = ShortifyPunit::mock('Symfony\Component\DependencyInjection\Container');
         ShortifyPunit::when($mockedContainer)->getParameter('sandbox.response.force')->returns($force);
 
