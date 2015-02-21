@@ -235,16 +235,11 @@ class SandboxResponseManager {
                 throw new RuntimeException('Missing `responseFallback` is not set properly in the Sandbox annotation');
             }
 
-            if (isset($apiResponseMultiAnnotation->responseFallback['type'])) {
-                $type = $apiResponseMultiAnnotation->responseFallback['type'];
-            }
-
-            if (isset($apiResponseMultiAnnotation->responseFallback['responseCode'])) {
-                $statusCode = $apiResponseMultiAnnotation->responseFallback['responseCode'];
-            }
-
-            $responsePath = $apiResponseMultiAnnotation->responseFallback['resource'];
-
+            return array(
+                isset($apiResponseMultiAnnotation->responseFallback['type']) ? $apiResponseMultiAnnotation->responseFallback['type'] : $type,
+                isset($apiResponseMultiAnnotation->responseFallback['responseCode']) ? $apiResponseMultiAnnotation->responseFallback['responseCode'] : $statusCode,
+                $apiResponseMultiAnnotation->responseFallback['resource']
+            );
         }
         return array($type, $statusCode, $responsePath);
     }
