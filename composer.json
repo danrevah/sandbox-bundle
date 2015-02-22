@@ -4,8 +4,8 @@
     "require": {
         "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.3",
-        "symfony/expression-language": "3.0.*",
-        "doctrine/common": "2.5.*",
+        "symfony/expression-language": "3.0.*@dev",
+        "doctrine/common": "2.5.*@dev",
         "danrevah/shortifypunit": "1.0.*"
     },
     "homepage": "https://github.com/danrevah/SandboxBundle",
