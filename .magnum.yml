@@ -1,5 +1,4 @@
 install:
-  - composer self-update
   - composer install
   - composer require symfony/framework-bundle:2.6
   - composer require symfony/expression-language
