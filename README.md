@@ -4,7 +4,7 @@
 
 > For example, if you have a controller which handles some action let's say a Purchase, 
 > you could use a fake response instead of creating a real purchase request.
-> Only by using annotations and in your Sandbox/Testing environment your Controller on that environment will be overriden with your response (in JSON or XML format).
+> Only by using annotations and in your Sandbox/Testing environment, Your Controller in that environment will be overriden with the response you choose (in JSON or XML format).
 
 
 ## Table of contents
