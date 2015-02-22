@@ -20,20 +20,22 @@ class SandboxListenerTest extends WebTestCase
         $request->request = $parameterBag;
         ShortifyPunit::when($requestStack)->getCurrentRequest()->returns($request);
         ShortifyPunit::when($event)->getController()->returns([0, 1]);
+        ShortifyPunit::when($event)->setController(anything())->returns(1);
 
         $sandboxListener = new SandboxListener($requestStack, $sandboxResponseManager);
         $sandboxListener->onKernelController($event);
 
-        ShortifyPunit::verify($event)->setController(anything())->atLeastOnce();
+        $this->assertTrue(ShortifyPunit::verify($event)->setController(anything())->atLeastOnce());
 
         $response = [false, 0, 0, 0];
         ShortifyPunit::when($sandboxResponseManager)->getResponseController(anything(), anything(), anything(), anything(), anything())->returns($response);
 
         $event2 = ShortifyPunit::mock('Symfony\Component\HttpKernel\Event\FilterControllerEvent');
+        ShortifyPunit::when($event2)->setController(anything())->returns('');
         ShortifyPunit::when($event2)->getController(anything())->returns([0, 1]);
         $sandboxListener = new SandboxListener($requestStack, $sandboxResponseManager);
         $sandboxListener->onKernelController($event2);
 
-        ShortifyPunit::verify($event2)->setController(anything())->neverCalled();
+        $this->assertTrue(ShortifyPunit::verify($event2)->setController(anything())->neverCalled());
     }
 }
