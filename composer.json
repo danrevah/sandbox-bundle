@@ -3,9 +3,7 @@
     "description": "SandboxBundle",
     "require": {
         "php": ">=5.5.0",
-        "danrevah/shortifypunit": "1.0.6",
-        "doctrine/common": "2.4.*",
-        "symfony/framework-bundle": "2.6"
+        "danrevah/shortifypunit": "1.0.6"
     },
         "homepage": "https://github.com/danrevah/SandboxBundle",
         "license": "MIT",
