@@ -1,7 +1,6 @@
 <?php
 namespace danrevah\SandboxBundle\Managers;
 
-use danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse;
 use danrevah\SandboxBundle\Enum\ApiSandboxResponseTypeEnum;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -107,7 +106,7 @@ class SandboxResponseManager {
         }
 
         if ($responsePath === null && $apiResponseMultiAnnotation) {
-            list($type, $statusCode, $responsePath) = $this->extractRealParams($responsePath, $apiResponseMultiAnnotation, $type, $statusCode);
+            list($type, $statusCode, $responsePath) = $this->extractRealParams($apiResponseMultiAnnotation, $type, $statusCode);
         }
 
         list($controller, $content) = $this->getControllerResponseByResource($responsePath, $type, $statusCode);
@@ -218,14 +217,13 @@ class SandboxResponseManager {
     }
 
     /**
-     * @param $responsePath
      * @param \StdClass $apiResponseMultiAnnotation
      * @param $type
      * @param $statusCode
      * @throws \RuntimeException
      * @return array
      */
-    private function extractRealParams($responsePath, \StdClass $apiResponseMultiAnnotation, $type, $statusCode)
+    private function extractRealParams(\StdClass $apiResponseMultiAnnotation, $type, $statusCode)
     {
         // If didn't find route path, fall to responseFallback
         if (empty($apiResponseMultiAnnotation->responseFallback) || ! isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
