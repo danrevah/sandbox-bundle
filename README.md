@@ -1,9 +1,9 @@
 # SandboxBundle &nbsp; [![Build Status](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/build-status/master) [![Code Coverage](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/?branch=master)
 
-> Symfony2 SandboxBundle
-> is mostly used in conditions when you don't want to reach your real controller on a sandbox enviorment,
-> for example, if you have a controller which handles a Purchase, 
+> SandboxBundle is a Symfony2 Bundle which is mostly used in conditions when you don't want to reach your real controller in a Sandbox/Testing environment,
+> for example, if you have a controller which handles some action let's say a Purchase, 
 > you could use a fake response instead of creating a real purchase request.
+> Only by using annotaions and in your Sandbox/Testing environment.
 
 
 ## Table of contents
