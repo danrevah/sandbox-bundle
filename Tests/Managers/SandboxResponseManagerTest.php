@@ -476,12 +476,10 @@ class SandboxResponseManagerTest extends WebTestCase
 
         // Mocking the sandbox response manager dependencies
         $kernel = ShortifyPunit::mock('SandboxBundle\Tests\Managers\AppKernel');
-        $mockedContainer = ShortifyPunit::mock('Symfony\Component\DependencyInjection\Container');
-        ShortifyPunit::when($mockedContainer)->getParameter('sandbox.response.force')->returns($force);
 
         ShortifyPunit::when($kernel)->locateResource('@SandboxBundle/Resources/responses/token.xml')->returns(self::$XML_PATH);
         ShortifyPunit::when($kernel)->locateResource('@SandboxBundle/Resources/responses/token.json')->returns(self::$JSON_PATH);
         // Create manager
-        return new SandboxResponseManager($kernel, $mockedContainer, $annotationsReader);
+        return new SandboxResponseManager($kernel, $force, $annotationsReader);
     }
 }
