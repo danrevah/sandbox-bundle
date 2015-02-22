@@ -3,11 +3,14 @@
     "description": "SandboxBundle",
     "require": {
         "php": ">=5.5.0",
-        "danrevah/shortifypunit": "1.0.6"
+        "symfony/framework-bundle": "~2.3",
+        "symfony/expression-language": "3.0.*@dev",
+        "doctrine/common": "2.5.*@dev",
+        "danrevah/shortifypunit": "1.0.*"
     },
-        "homepage": "https://github.com/danrevah/SandboxBundle",
-        "license": "MIT",
-        "authors": [
+    "homepage": "https://github.com/danrevah/SandboxBundle",
+    "license": "MIT",
+    "authors": [
         {
             "name": "Dan Revah",
             "email": "dan@revahbox.com"
