@@ -17,8 +17,8 @@
         </testsuite>
     </testsuites>
 
-    <logging>
-        <log type="coverage-clover" target="tmp/coverage.clover"/>
+<logging>
+        <log type="coverage-html" target="build/coverage"/>
     </logging>
 
     <filter>
