@@ -2,7 +2,7 @@
     "name": "danrevah/sandbox-bundle",
     "description": "SandboxBundle",
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.4.0",
         "danrevah/shortifypunit": "1.0.6",
         "doctrine/common": "2.4.*",
         "symfony/framework-bundle": "2.*",
