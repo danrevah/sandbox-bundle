@@ -4,7 +4,7 @@
     "require": {
         "php": ">=5.5.0",
         "symfony/framework-bundle": "~2.3",
-        "symfony/expression-language": "3.0.*@dev",
+        "symfony/expression-language": "2.6.4@dev",
         "doctrine/common": "2.5.*@dev",
         "danrevah/shortifypunit": "1.0.*"
     },
