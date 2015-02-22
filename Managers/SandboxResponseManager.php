@@ -2,13 +2,11 @@
 namespace danrevah\SandboxBundle\Managers;
 
 use danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse;
-use danrevah\SandboxBundle\Annotation\ApiSandboxResponse;
 use danrevah\SandboxBundle\Enum\ApiSandboxResponseTypeEnum;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use ReflectionMethod;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,11 +59,13 @@ class SandboxResponseManager {
         $reflectionMethod = new ReflectionMethod($object, $method);
 
         // Step [1] - Single Response Annotation
+        /** @var \StdClass $apiResponseAnnotation */
         $apiResponseAnnotation = $reader->getMethodAnnotation(
             $reflectionMethod,
             'danrevah\SandboxBundle\Annotation\ApiSandboxResponse'
         );
 
+        /** @var \StdClass $apiResponseMultiAnnotation */
         $apiResponseMultiAnnotation = $reader->getMethodAnnotation(
             $reflectionMethod,
             'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse'
@@ -106,14 +106,17 @@ class SandboxResponseManager {
             );
         }
 
-        list($type, $statusCode, $responsePath) = $this->extractRealParams($responsePath, $apiResponseMultiAnnotation, $type, $statusCode);
+        if ($responsePath === null && $apiResponseMultiAnnotation) {
+            list($type, $statusCode, $responsePath) = $this->extractRealParams($responsePath, $apiResponseMultiAnnotation, $type, $statusCode);
+        }
+
         list($controller, $content) = $this->getControllerResponseByResource($responsePath, $type, $statusCode);
 
         return [$controller, $content, $type, $statusCode];
     }
 
     /**
-     * @param ApiSandboxMultiResponse $apiResponseMultiAnnotation
+     * @param \StdClass $apiResponseMultiAnnotation
      * @param $streamParams
      * @param $request
      * @param $query
@@ -121,7 +124,7 @@ class SandboxResponseManager {
      * @return array
      */
     private function getResource(
-        $apiResponseMultiAnnotation,
+        \StdClass $apiResponseMultiAnnotation,
         ArrayCollection $streamParams,
         ParameterBag $request,
         ParameterBag $query
@@ -216,27 +219,24 @@ class SandboxResponseManager {
 
     /**
      * @param $responsePath
-     * @param $apiResponseMultiAnnotation
+     * @param \StdClass $apiResponseMultiAnnotation
      * @param $type
      * @param $statusCode
      * @throws \RuntimeException
      * @return array
      */
-    private function extractRealParams($responsePath, $apiResponseMultiAnnotation, $type, $statusCode)
+    private function extractRealParams($responsePath, \StdClass $apiResponseMultiAnnotation, $type, $statusCode)
     {
         // If didn't find route path, fall to responseFallback
-        if ($responsePath === null && $apiResponseMultiAnnotation) {
-            if (empty($apiResponseMultiAnnotation->responseFallback) || ! isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
-                throw new RuntimeException('Missing `responseFallback` is not set properly in the Sandbox annotation');
-            }
-
-            return array(
-                isset($apiResponseMultiAnnotation->responseFallback['type']) ? $apiResponseMultiAnnotation->responseFallback['type'] : $type,
-                isset($apiResponseMultiAnnotation->responseFallback['responseCode']) ? $apiResponseMultiAnnotation->responseFallback['responseCode'] : $statusCode,
-                $apiResponseMultiAnnotation->responseFallback['resource']
-            );
+        if (empty($apiResponseMultiAnnotation->responseFallback) || ! isset($apiResponseMultiAnnotation->responseFallback['resource'])) {
+            throw new RuntimeException('Missing `responseFallback` is not set properly in the Sandbox annotation');
         }
-        return array($type, $statusCode, $responsePath);
+
+        return array(
+            isset($apiResponseMultiAnnotation->responseFallback['type']) ? $apiResponseMultiAnnotation->responseFallback['type'] : $type,
+            isset($apiResponseMultiAnnotation->responseFallback['responseCode']) ? $apiResponseMultiAnnotation->responseFallback['responseCode'] : $statusCode,
+            $apiResponseMultiAnnotation->responseFallback['resource']
+        );
     }
 
     /**

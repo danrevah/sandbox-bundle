@@ -2,11 +2,9 @@
 namespace danrevah\SandboxBundle\EventListener;
 
 use danrevah\SandboxBundle\Managers\SandboxResponseManager;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 class SandboxListener
 {
