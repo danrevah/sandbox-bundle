@@ -71,7 +71,10 @@ class SandboxResponseManagerTest extends WebTestCase
     private static $XML_PATH = 'Resources/responses/token.xml';
     private static $JSON_PATH = 'Resources/responses/token.json';
 
-    public function testSandboxResponseNotForced()
+    /**
+     * @expectedException \Exception
+     */
+    public function testSandboxResponseForced()
     {
         $sandboxResponseManager = $this->createManager(false);
 
@@ -84,6 +87,10 @@ class SandboxResponseManagerTest extends WebTestCase
 
         $response = $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
         $this->assertFalse($response);
+
+        // another test for exception with force
+        $sandboxResponseManager = $this->createManager(true);
+        $sandboxResponseManager->getResponseController($object, $method, $request, $query, $rawRequest);
     }
 
     /**
