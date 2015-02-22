@@ -1,21 +1,12 @@
 <?php
 namespace danrevah\SandboxBundle\EventListener;
 
-use danrevah\SandboxBundle\Annotation\ApiSandboxResponse;
-use danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse;
-use danrevah\SandboxBundle\Enum\ApiSandboxResponseTypeEnum;
 use danrevah\SandboxBundle\Managers\SandboxResponseManager;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
-use InvalidArgumentException;
-use ReflectionMethod;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Serializer\Exception\RuntimeException;
 
 class SandboxListener
 {

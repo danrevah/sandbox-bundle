@@ -21,24 +21,21 @@ class SandboxResponseManager {
      */
     private $kernel;
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
-    /**
      * @var \Doctrine\Common\Annotations\AnnotationReader
      */
     private $annotationsReader;
+    private $forceMode;
 
     /**
      * @param KernelInterface $kernel
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param $forceMode
      * @param \Doctrine\Common\Annotations\AnnotationReader $annotationsReader
      */
-    public function __construct($kernel, ContainerInterface $container, AnnotationReader $annotationsReader)
+    public function __construct($kernel, $forceMode, AnnotationReader $annotationsReader)
     {
         $this->kernel = $kernel;
-        $this->container = $container;
         $this->annotationsReader = $annotationsReader;
+        $this->forceMode = $forceMode;
     }
 
     /**
@@ -64,13 +61,11 @@ class SandboxResponseManager {
         $reflectionMethod = new ReflectionMethod($object, $method);
 
         // Step [1] - Single Response Annotation
-        /** @var ApiSandboxResponse $apiResponseAnnotation */
         $apiResponseAnnotation = $reader->getMethodAnnotation(
             $reflectionMethod,
             'danrevah\SandboxBundle\Annotation\ApiSandboxResponse'
         );
 
-        /** @var ApiSandboxMultiResponse $apiResponseMultiAnnotation */
         $apiResponseMultiAnnotation = $reader->getMethodAnnotation(
             $reflectionMethod,
             'danrevah\SandboxBundle\Annotation\ApiSandboxMultiResponse'
@@ -78,7 +73,7 @@ class SandboxResponseManager {
 
         if ( ! $apiResponseAnnotation && ! $apiResponseMultiAnnotation) {
             // Disabled exception, continue to real controller
-            $forceMode = $this->container->getParameter('sandbox.response.force');
+            $forceMode = $this->forceMode;
 
             if ($forceMode) {
                 throw new \Exception(sprintf(
