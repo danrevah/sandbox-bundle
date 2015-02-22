@@ -23,8 +23,8 @@ have Composer, you can download it from [http://getcomposer.org/](http://getcomp
  * Run either of the following commands, depending on your environment:
 
 ```
-$ composer require "danrevah/sandbox-bundle":"dev-master" 
-$ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
+$ composer require "danrevah/sandbox-bundle":"1.0.*" 
+$ php composer.phar require "danrevah/sandbox-bundle":"1.0.*" 
 ```
 
 
