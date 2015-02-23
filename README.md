@@ -33,7 +33,7 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
 
 * Copy the file from your `project-root-directory/web/app_dev.php` into the same directory and call the new file `app_sandbox.php`.
 * In the file you've just created `app_sandbox.php` change this line `$kernel = new AppKernel('dev', true); ` to this line `$kernel = new AppKernel('sandbox', true); `
-* Go to `project-root-directory/app/AppKernel.php` and change this line  `if (in_array($this->getEnvironment(), array('dev', 'test'))) ``` to this line `if (in_array($this->getEnvironment(), array('dev', 'test','sandbox'))) ```
+* Go to `project-root-directory/app/AppKernel.php` and change this line  `if (in_array($this->getEnvironment(), array('dev', 'test'))) ` to this line `if (in_array($this->getEnvironment(), array('dev', 'test','sandbox'))) ```
 * In the AppKernel.php file after the `if case` you've just edited, add this `if case` also:
 ```php
     if (in_array($this->getEnvironment(), array('sandbox'))) {
@@ -116,6 +116,6 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
 * `responseCode` (default = 200) - it's the Http response code of the Sandbox response.
 * `type` (default = 'json') - you can choose between 'json' and 'xml'.
 * `parameters` (default = array()) - this is used to validate required parameters in the Sandbox API in order to produce an Exception if the parameter is missing.
-* `multiResponse` (**required**) - used to find matching `parameters` from the request and if the values are equal, it returns a response with the `resource` file mentiond. the parameters `type` and `responseCode` insdie the `multiResponse` are not required it will use the parent parameters if none is found inside a matching case.
+* `multiResponse` (**required**) - used to find matching `parameters` from the request and if the values are equal, it returns a response with the `resource` file mentiond. the parameters `type` and `responseCode` inside the `multiResponse` are not required it will use the parent parameters if none is found inside a matching case.
 * `responseFallback` (**required**) - it's using this response when none of the `multiResponse` `caseParams` has been matched.
 
