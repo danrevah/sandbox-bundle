@@ -1,11 +1,11 @@
 # SandboxBundle &nbsp; 
 [![Build Status](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/build-status/master) [![Code Coverage](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danrevah/SandboxBundle/?branch=master) [![Latest Stable Version](https://poser.pugx.org/danrevah/sandbox-bundle/v/stable.svg)](https://packagist.org/packages/danrevah/sandbox-bundle) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/340a668f-05a0-47a7-b5e2-c574a3b7e53d/mini.png)](https://insight.sensiolabs.com/projects/340a668f-05a0-47a7-b5e2-c574a3b7e53d)
 
-> SandboxBundle is a Symfony2 Bundle which is mostly used in conditions when you don't want to reach your real controller in a Sandbox/Testing environment.
+> SandboxBundle is a Symfony2 Bundle which is mostly used in conditions when you don't want to reach your real controller in a sandbox / testing environment.
 
-> For example, if you have a controller which handles some action let's say a Purchase, 
+> For example, if you have a controller which handles some action let's say a purchase, 
 > you could use a fake response instead of creating a real purchase request.
-> Only by using annotations and in your Sandbox/Testing environment the Controller will be overriden with the response you choose (in JSON or XML format).
+> Only by using annotations and in your sandbox / testing environment the controller will be overriden with the response you choose (in JSON or XML format).
 
 
 ## Table of contents
@@ -54,7 +54,7 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
 
 ## Single Response Annotation
 
-> used in situations when you need a constant response while on sandbox enviorment. the response will always be the same
+used in situations when you need a constant response while on sandbox enviorment. the response will always be the same.
 
 ```php
     /**
@@ -82,7 +82,7 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
 
 ## Multi Response Annotation
 
-> used in situations when you need to return different responses depending on the parameters which are being sent
+used in situations when you need to return different responses depending on the parameters which are being sent.
 
 ```php
     /**
