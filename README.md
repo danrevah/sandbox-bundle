@@ -54,6 +54,8 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
 
 ## Single Response Annotation
 
+> used in situations when you need a constant response while on sandbox enviorment. the response will always be the same
+
 ```php
     /**
      * GET /resource
@@ -79,6 +81,8 @@ $ php composer.phar require "danrevah/sandbox-bundle":"dev-master"
 
 
 ## Multi Response Annotation
+
+> used in situations when you need to return different responses depending on the parameters which are being sent
 
 ```php
     /**
