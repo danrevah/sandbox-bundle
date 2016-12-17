@@ -116,7 +116,7 @@ used in situations when you need to return different responses depending on the 
         return array('bar');
     }
 ```
-
+ 
 * `responseCode` (default = 200) - it's the Http response code of the Sandbox response.
 * `type` (default = 'json') - you can choose between 'json' and 'xml'.
 * `parameters` (default = array()) - this is used to validate required parameters in the Sandbox API in order to produce an Exception if the parameter is missing.
