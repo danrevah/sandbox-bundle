@@ -8,7 +8,6 @@
 > Only by using annotations and in your sandbox / testing environment the controller will be overriden with the response you choose (in JSON or XML format).
 
 
-
 ## Table of contents
 
  * [Installation](#installation)
