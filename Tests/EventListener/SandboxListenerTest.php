@@ -1,4 +1,5 @@
 <?php
+
 namespace SandboxBundle\Tests\EventListener;
 
 use danrevah\SandboxBundle\EventListener\SandboxListener;
