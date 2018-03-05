@@ -1,4 +1,5 @@
 <?php
+
 namespace SandboxBundle\Tests\Managers;
 
 use danrevah\SandboxBundle\Managers\SandboxResponseManager;
