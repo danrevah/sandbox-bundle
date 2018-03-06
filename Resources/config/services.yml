@@ -1,5 +1,4 @@
 services:
-
   danrevah.response_listener:
       class: danrevah\SandboxBundle\EventListener\SandboxListener
       arguments: [@request_stack, @danrevah.sandbox_response_manager]
