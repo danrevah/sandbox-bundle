@@ -1,4 +1,5 @@
 <?php
+
 namespace danrevah\SandboxBundle\EventListener;
 
 use danrevah\SandboxBundle\Managers\SandboxResponseManager;
