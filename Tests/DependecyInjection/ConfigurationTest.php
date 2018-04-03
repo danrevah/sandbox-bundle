@@ -1,4 +1,5 @@
 <?php
+
 namespace SandboxBundle\Tests\DependencyInjection;
 
 use danrevah\SandboxBundle\DependencyInjection\Configuration;
